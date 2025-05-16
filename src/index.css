@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+    --color-gray-light:"F8FAFC";
+    --color-gray : "#9AA6B2";
+    --color-gray-midlight:"#BCCCDC"
+    --color-gray-sky:"#D9EAFD";
+}
+
+
+
+
