@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
 *, *::after, *::before {
-  margin: 0 !important;
-  padding: 0 !important;
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -15,9 +15,11 @@ p {
   padding: 0;
 }
 
+.container {
+  max-width: 90%;
+  margin: 0 auto !important;
+}
+
 input, select, option, textarea {
-  border: 1.5px solid lightgray !important;
-  padding: 5px;
-  border-radius: 5px;
   width: 100%;
 }/*# sourceMappingURL=main.css.map */
