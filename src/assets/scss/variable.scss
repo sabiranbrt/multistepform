@@ -11,12 +11,6 @@ html{
     font-family: "Lato", sans-serif;
 }
 
-#root{
-    max-width: none !important;
-    text-align: inherit !important;
-    padding: 0 !important;
-    margin:0 !important
-}
 p{
     margin: 0;
     padding: 0;
@@ -26,8 +20,8 @@ p{
     max-width: 90%;
     margin: 0 auto !important;
 }
+
 // color
-$gray-border-color: "#E3E6E5";
 $white-color: "#fff";
 $black-color: "#000";
 $label-color:"#E3E6E5"

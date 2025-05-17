@@ -3,15 +3,12 @@ export const JsonFormat = [
         "status": "Additional Information",
         "displayRemarks": "Please provide additional details",
         "errorColor": "#ff4d4f",
-        "colGrid": "3",
-        "gapCol": "40",
-        "gapRow": "20",
+        "focusErrorBgColor": "#111827",
         "displayField": [
             {
                 "key": "firstName",
                 "label": "First Name",
                 "placeholder": "Enter First Name",
-                "nonInputLabel": "NoN Input Label",
                 "fieldType": "text",
                 "validation": {
                     "required": "Y",
@@ -25,8 +22,19 @@ export const JsonFormat = [
                 "placeholder": "Enter Last Name",
                 "fieldType": "text",
                 "validation": {
-                    "required": "Y",
+                    "required": "N",
                     "pattern": "^[A-Za-z]{2,50}$",
+                    "errorMessage": "Name must be 2-50 characters and contain only letters and spaces."
+                }
+            },
+            {
+                "key": "password",
+                "label": "Password",
+                "placeholder": "Enter Password",
+                "fieldType": "custompass",
+                "textSecurity": "$",
+                "validation": {
+                    "required": "Y",
                     "errorMessage": "Name must be 2-50 characters and contain only letters and spaces."
                 }
             },
@@ -68,7 +76,7 @@ export const JsonFormat = [
                 }
             },
             {
-                "key": "designation",
+                "key": "relations",
                 "label": "Designation",
                 "placeholder": "Select Designation",
                 "nonInputLabel": "NoN Input Label",
@@ -89,6 +97,23 @@ export const JsonFormat = [
                 "label": "Designation",
                 "placeholder": "Select Designation",
                 "fieldType": "dropdown",
+                "dropdownOptions": [
+                    { "label": "Spouse", "value": "1" },
+                    { "label": "Sibling", "value": "2" },
+                    { "label": "Parent or Guardian", "value": "3" },
+                    { "label": "Others", "value": "4" }
+                ],
+                "validation": {
+                    "required": "Y",
+                    "errorMessage": "Please select a valid relationship."
+                }
+            },
+            {
+                "key": "Upload Photo",
+                "label": "Photo",
+                "placeholder": "Upload Photo",
+                "fieldType": "file",
+                "nonInputLabel": "Choose Gender",
                 "dropdownOptions": [
                     { "label": "Spouse", "value": "1" },
                     { "label": "Sibling", "value": "2" },
@@ -206,7 +231,7 @@ export const JsonFormat = [
         ]
     },
     {
-        "status": "Additional Information",
+        "status": "Information",
         "displayRemarks": "Please provide additional details",
         "errorColor": "#ff4d4f",
         "colGrid": "3",
@@ -309,7 +334,7 @@ export const JsonFormat = [
         ]
     },
     {
-        "status": "Additional Information",
+        "status": "Additional",
         "displayRemarks": "Please provide additional details",
         "errorColor": "#ff4d4f",
         "colGrid": "3",
