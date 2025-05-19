@@ -4,6 +4,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { default as CustomField } from "./components/CustomField";
 import MultiFormHeader from "./components/multiFormHeader";
 import { JsonFormat } from "./utils/usejsonStructure";
+import LineStepper from "./components/lineStepper";
 
 const StepForm = () => {
   const [index, setIndex] = useState(0);
@@ -45,8 +46,15 @@ const StepForm = () => {
                   Follow the steps to make submit form
                 </p>
               </div>
+
               <MultiFormHeader currentIndex={index} />
-              <div className=" absolute bottom-0  w-full h-[0.5px] bg-gray-300"></div>
+              <LineStepper
+                currentIndex={index}
+                steps={currentItem.section.map(
+                  (s: any) => s.status || `Step ${s.step}`
+                )}
+              />
+              <div className=" absolute bottom-0 w-full h-[0.5px] bg-gray-300"></div>
             </div>
 
             <div
@@ -60,9 +68,8 @@ const StepForm = () => {
               </h1>
               <div className=" text-start">
                 <div
-                  className={clsx("md:!grid-cols-2")}
+                  className="custom-grid"
                   style={{
-                    display: "grid",
                     gridTemplateColumns: `repeat(${
                       currentItem?.colGrid ?? 3
                     }, 1fr)`,
@@ -70,28 +77,26 @@ const StepForm = () => {
                     rowGap: `${currentItem?.gapRow ?? 40}px`,
                   }}
                 >
-                  {currentSection &&
-                    currentSection?.displayField?.map((displaylist: any) => {
-                      return (
-                        <CustomField
-                          key={displaylist.key}
-                          names={displaylist.key}
-                          label={displaylist.label}
-                          type={displaylist.subType}
-                          isSearchable={displaylist?.isSearchable}
-                          // textSecurity={displaylist.textSecurity}
-                          focusErrorBgColor={displaylist.focusErrorBgColor}
-                          placeHolder={displaylist.placeholder}
-                          fieldType={displaylist.fieldType}
-                          options={displaylist.dropdownOptions}
-                          validation={{
-                            required: displaylist.validation.required,
-                            pattern: displaylist.validation.pattern,
-                            errorMessage: displaylist.validation.errorMessage,
-                          }}
-                        />
-                      );
-                    })}
+                  {currentSection?.displayField?.map((displaylist: any) => {
+                    return (
+                      <CustomField
+                        key={displaylist.key}
+                        names={displaylist.key}
+                        label={displaylist.label}
+                        type={displaylist.subType}
+                        isSearchable={displaylist?.isSearchable}
+                        focusErrorBgColor={displaylist.focusErrorBgColor}
+                        placeHolder={displaylist.placeholder}
+                        fieldType={displaylist.fieldType}
+                        options={displaylist.dropdownOptions}
+                        validation={{
+                          required: displaylist.validation.required,
+                          pattern: displaylist.validation.pattern,
+                          errorMessage: displaylist.validation.errorMessage,
+                        }}
+                      />
+                    );
+                  })}
                 </div>
                 <div className="flex items-center gap-5 !mt-10">
                   {index > 0 && (

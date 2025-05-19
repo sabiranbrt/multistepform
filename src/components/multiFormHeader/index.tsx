@@ -34,7 +34,7 @@ const MultiFormHeader = ({ currentIndex }: IProp) => {
             >
               <p
                 className={clsx(
-                  "font-semibold text-[18px] ",
+                  "font-semibold text-[18px]",
                   isComplete ? "text-[#5081B9]" : "text-gray-500"
                 )}
               >

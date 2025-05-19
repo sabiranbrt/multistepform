@@ -1,48 +1,48 @@
 export const JsonFormat = [
     {
         "layout": "horizontallayout",
-        "colGrid": "3",
+        "colGrid": "4",
         "gapCol": "40",
         "gapRow": "20",
         "section": [
             {
-                "status": "Additional Information",
-                "displayRemarks": "Please provide additional details",
+                "status": "Personal Information",
+                "displayRemarks": "Please provide personal information",
                 "errorColor": "#ff4d4f",
                 "focusErrorBgColor": "#DCFFDB",
                 "nos": "1",
                 "displayField": [
                     {
-                        "key": "firstName",
-                        "label": "First Name",
-                        "placeholder": "Enter First Name",
-                        "isSearchable": true,
+                        "key": "fullname",
+                        "label": "Full Name",
+                        "placeholder": "Enter your full name",
                         "fieldType": "text",
+                        "readOnly": true,
                         "validation": {
-                            "required": "N",
+                            "required": "Y",
                             "pattern": "^[A-Za-z]{2,50}$",
                             "errorMessage": "Name must be 2-50 characters and contain only letters and spaces."
                         }
                     },
                     {
-                        "key": "lastname",
-                        "label": "Last Name",
-                        "placeholder": "Enter Last Name",
+                        "key": "dob",
+                        "label": "Date of Birth",
+                        "placeholder": "YYYY-MM-DD",
                         "fieldType": "text",
+                        "subType": "date",
                         "validation": {
-                            "required": "N",
-                            "pattern": "^[A-Za-z]{2,50}$",
-                            "errorMessage": "Name must be 2-50 characters and contain only letters and spaces."
+                            "required": "Y",
+                            "errorMessage": "Select date of birth"
                         }
                     },
                     {
-                        "key": "password",
-                        "label": "Password",
-                        "placeholder": "Enter Password",
-                        "fieldType": "custompass",
+                        "key": "citizenshipnumber",
+                        "label": "Citizenship Number",
+                        "placeholder": "Enter Citizenship Number",
+                        "fieldType": "text",
                         "textSecurity": "$",
                         "validation": {
-                            "required": "N",
+                            "required": "Y",
                             "errorMessage": "Name must be 2-50 characters and contain only letters and spaces."
                         }
                     },
@@ -53,24 +53,24 @@ export const JsonFormat = [
                         "fieldType": "text",
                         "subType": "number",
                         "validation": {
-                            "required": "N",
+                            "required": "Y",
                             "pattern": "^[6-9]\\d{9}$",
                             "errorMessage": "Enter a valid 10-digit mobile number starting with 6-9."
                         }
                     },
                     {
-                        "key": "alternate_addressline1",
-                        "label": "Addressline1",
-                        "placeholder": "Enter Address Line 1",
+                        "key": "profession",
+                        "label": "Profession",
+                        "placeholder": "Enter your profession",
                         "fieldType": "text",
                         "validation": {
-                            "required": "N",
+                            "required": "Y",
                             "errorMessage": "Address Line 1 must be between 5 and 100 characters."
                         }
                     },
                     {
                         "key": "Gender",
-                        "label": "Designation",
+                        "label": "Gender",
                         "placeholder": "Select Gender",
                         "fieldType": "radio",
                         "nonInputLabel": "Choose Gender",
@@ -79,15 +79,14 @@ export const JsonFormat = [
                             { "label": "Female", "value": "Female" },
                         ],
                         "validation": {
-                            "required": "N",
+                            "required": "Y",
                             "errorMessage": "Please select a valid relationship."
                         }
                     },
                     {
                         "key": "relations",
-                        "label": "Designation",
-                        "placeholder": "Select Designation",
-                        "nonInputLabel": "NoN Input Label",
+                        "label": "Realtion",
+                        "placeholder": "Choose Relation",
                         "fieldType": "checkbox",
                         "dropdownOptions": [
                             { "label": "Spouse", "value": "1" },
@@ -96,7 +95,7 @@ export const JsonFormat = [
                             { "label": "Others", "value": "4" }
                         ],
                         "validation": {
-                            "required": "N",
+                            "required": "Y",
                             "errorMessage": "Please select a valid relationship."
                         }
                     },
@@ -112,7 +111,7 @@ export const JsonFormat = [
                             { "label": "Others", "value": "4" }
                         ],
                         "validation": {
-                            "required": "N",
+                            "required": "Y",
                             "errorMessage": "Please select a valid relationship."
                         }
                     },
@@ -129,7 +128,7 @@ export const JsonFormat = [
                             { "label": "Others", "value": "4" }
                         ],
                         "validation": {
-                            "required": "N",
+                            "required": "Y",
                             "errorMessage": "Please select a valid relationship."
                         }
                     },
@@ -139,320 +138,63 @@ export const JsonFormat = [
                         "placeholder": "Upload Photo",
                         "fieldType": "file",
                         "nonInputLabel": "Choose Gender",
-                        "dropdownOptions": [
-                            { "label": "Spouse", "value": "1" },
-                            { "label": "Sibling", "value": "2" },
-                            { "label": "Parent or Guardian", "value": "3" },
-                            { "label": "Others", "value": "4" }
-                        ],
                         "validation": {
-                            "required": "N",
+                            "required": "Y",
                             "errorMessage": "Please select a valid relationship."
                         }
                     }
                 ]
             },
             {
-                "status": "Additional Information",
-                "displayRemarks": "Please provide additional details",
+                "status": "Temporary Address",
+                "displayRemarks": "Please provide temporary address details",
                 "errorColor": "#ff4d4f",
                 "nos": "2",
                 "displayField": [
                     {
-                        "key": "firstName",
-                        "label": "First Name",
-                        "placeholder": "Enter First Name",
-                        "nonInputLabel": "NoN Input Label",
+                        "key": "country",
+                        "label": "Country",
+                        "placeholder": "Enter Country Name",
                         "fieldType": "text",
                         "validation": {
-                            "required": "N",
-                            "pattern": "^[A-Za-z]{2,50}$",
-                            "errorMessage": "Name must be 2-50 characters and contain only letters and spaces."
+                            "required": "Y",
+                            "errorMessage": "Must Enter county name"
                         }
                     },
                     {
-                        "key": "lastname",
-                        "label": "Last Name",
-                        "placeholder": "Enter Last Name",
-                        "fieldType": "text",
-                        "validation": {
-                            "required": "N",
-                            "pattern": "^[A-Za-z]{2,50}$",
-                            "errorMessage": "Name must be 2-50 characters and contain only letters and spaces."
-                        }
-                    },
-                    {
-                        "key": "mobilenumber",
-                        "label": "Mobile Number",
-                        "placeholder": "Enter Mobile Number",
-                        "fieldType": "text",
-                        "subType": "number",
-                        "validation": {
-                            "required": "N",
-                            "pattern": "^[6-9]\\d{9}$",
-                            "errorMessage": "Enter a valid 10-digit mobile number starting with 6-9."
-                        }
-                    },
-                    {
-                        "key": "alternate_addressline1",
-                        "label": "Addressline1",
-                        "placeholder": "Enter Address Line 1",
-                        "fieldType": "text",
-                        "validation": {
-                            "required": "N",
-                            "errorMessage": "Address Line 1 must be between 5 and 100 characters."
-                        }
-                    },
-                    {
-                        "key": "Gender",
-                        "label": "Designation",
-                        "placeholder": "Select Gender",
-                        "fieldType": "radio",
-                        "nonInputLabel": "Choose Gender",
-                        "dropdownOptions": [
-                            { "label": "Male", "value": "Male" },
-                            { "label": "Female", "value": "Female" },
-                        ],
-                        "validation": {
-                            "required": "N",
-                            "errorMessage": "Please select a valid relationship."
-                        }
-                    },
-                    {
-                        "key": "designation",
-                        "label": "Designation",
-                        "placeholder": "Select Designation",
-                        "nonInputLabel": "NoN Input Label",
-                        "fieldType": "checkbox",
-                        "dropdownOptions": [
-                            { "label": "Spouse", "value": "1" },
-                            { "label": "Sibling", "value": "2" },
-                            { "label": "Parent or Guardian", "value": "3" },
-                            { "label": "Others", "value": "4" }
-                        ],
-                        "validation": {
-                            "required": "N",
-                            "errorMessage": "Please select a valid relationship."
-                        }
-                    },
-                    {
-                        "key": "designation",
-                        "label": "Designation",
-                        "placeholder": "Select Designation",
+                        "key": "province",
+                        "label": "Province",
+                        "placeholder": "Select Province",
                         "fieldType": "dropdown",
                         "dropdownOptions": [
-                            { "label": "Spouse", "value": "1" },
-                            { "label": "Sibling", "value": "2" },
-                            { "label": "Parent or Guardian", "value": "3" },
+                            { "label": "Province one", "value": "1" },
+                            { "label": "Province two", "value": "2" },
+                            { "label": "Bagmati", "value": "3" },
                             { "label": "Others", "value": "4" }
                         ],
                         "validation": {
-                            "required": "N",
+                            "required": "Y",
                             "errorMessage": "Please select a valid relationship."
                         }
-                    }
+                    },
                 ]
             },
             {
-                "status": "Information",
-                "displayRemarks": "Please provide additional details",
+                "status": "Permanent Address",
+                "displayRemarks": "Please provide permanenta address details",
                 "errorColor": "#ff4d4f",
                 "nos": "3",
                 "displayField": [
                     {
-                        "key": "firstName",
-                        "label": "First Name",
-                        "placeholder": "Enter First Name",
-                        "nonInputLabel": "NoN Input Label",
+                        "key": "street",
+                        "label": "Street Name",
+                        "placeholder": "Enter Stret Name",
                         "fieldType": "text",
                         "validation": {
-                            "required": "N",
-                            "pattern": "^[A-Za-z]{2,50}$",
+                            "required": "Y",
                             "errorMessage": "Name must be 2-50 characters and contain only letters and spaces."
                         }
                     },
-                    {
-                        "key": "lastname",
-                        "label": "Last Name",
-                        "placeholder": "Enter Last Name",
-                        "fieldType": "text",
-                        "validation": {
-                            "required": "N",
-                            "pattern": "^[A-Za-z]{2,50}$",
-                            "errorMessage": "Name must be 2-50 characters and contain only letters and spaces."
-                        }
-                    },
-                    {
-                        "key": "mobilenumber",
-                        "label": "Mobile Number",
-                        "placeholder": "Enter Mobile Number",
-                        "fieldType": "text",
-                        "subType": "number",
-                        "validation": {
-                            "required": "N",
-                            "pattern": "^[6-9]\\d{9}$",
-                            "errorMessage": "Enter a valid 10-digit mobile number starting with 6-9."
-                        }
-                    },
-                    {
-                        "key": "alternate_addressline1",
-                        "label": "Addressline1",
-                        "placeholder": "Enter Address Line 1",
-                        "fieldType": "text",
-                        "validation": {
-                            "required": "N",
-                            "errorMessage": "Address Line 1 must be between 5 and 100 characters."
-                        }
-                    },
-                    {
-                        "key": "Gender",
-                        "label": "Designation",
-                        "placeholder": "Select Gender",
-                        "fieldType": "radio",
-                        "nonInputLabel": "Choose Gender",
-                        "dropdownOptions": [
-                            { "label": "Male", "value": "Male" },
-                            { "label": "Female", "value": "Female" },
-                        ],
-                        "validation": {
-                            "required": "N",
-                            "errorMessage": "Please select a valid relationship."
-                        }
-                    },
-                    {
-                        "key": "designation",
-                        "label": "Designation",
-                        "placeholder": "Select Designation",
-                        "nonInputLabel": "NoN Input Label",
-                        "fieldType": "checkbox",
-                        "dropdownOptions": [
-                            { "label": "Spouse", "value": "1" },
-                            { "label": "Sibling", "value": "2" },
-                            { "label": "Parent or Guardian", "value": "3" },
-                            { "label": "Others", "value": "4" }
-                        ],
-                        "validation": {
-                            "required": "N",
-                            "errorMessage": "Please select a valid relationship."
-                        }
-                    },
-                    {
-                        "key": "designation",
-                        "label": "Designation",
-                        "placeholder": "Select Designation",
-                        "fieldType": "dropdown",
-                        "dropdownOptions": [
-                            { "label": "Spouse", "value": "1" },
-                            { "label": "Sibling", "value": "2" },
-                            { "label": "Parent or Guardian", "value": "3" },
-                            { "label": "Others", "value": "4" }
-                        ],
-                        "validation": {
-                            "required": "N",
-                            "errorMessage": "Please select a valid relationship."
-                        }
-                    }
-                ]
-            },
-            {
-                "status": "Additional",
-                "displayRemarks": "Please provide additional details",
-                "errorColor": "#ff4d4f",
-                "nos": "4",
-                "displayField": [
-                    {
-                        "key": "firstName",
-                        "label": "First Name",
-                        "placeholder": "Enter First Name",
-                        "nonInputLabel": "NoN Input Label",
-                        "fieldType": "text",
-                        "validation": {
-                            "required": "N",
-                            "pattern": "^[A-Za-z]{2,50}$",
-                            "errorMessage": "Name must be 2-50 characters and contain only letters and spaces."
-                        }
-                    },
-                    {
-                        "key": "lastname",
-                        "label": "Last Name",
-                        "placeholder": "Enter Last Name",
-                        "fieldType": "text",
-                        "validation": {
-                            "required": "N",
-                            "pattern": "^[A-Za-z]{2,50}$",
-                            "errorMessage": "Name must be 2-50 characters and contain only letters and spaces."
-                        }
-                    },
-                    {
-                        "key": "mobilenumber",
-                        "label": "Mobile Number",
-                        "placeholder": "Enter Mobile Number",
-                        "fieldType": "text",
-                        "subType": "number",
-                        "validation": {
-                            "required": "N",
-                            "pattern": "^[6-9]\\d{9}$",
-                            "errorMessage": "Enter a valid 10-digit mobile number starting with 6-9."
-                        }
-                    },
-                    {
-                        "key": "alternate_addressline1",
-                        "label": "Addressline1",
-                        "placeholder": "Enter Address Line 1",
-                        "fieldType": "text",
-                        "validation": {
-                            "required": "N",
-                            "errorMessage": "Address Line 1 must be between 5 and 100 characters."
-                        }
-                    },
-                    {
-                        "key": "Gender",
-                        "label": "Designation",
-                        "placeholder": "Select Gender",
-                        "fieldType": "radio",
-                        "nonInputLabel": "Choose Gender",
-                        "dropdownOptions": [
-                            { "label": "Male", "value": "Male" },
-                            { "label": "Female", "value": "Female" },
-                        ],
-                        "validation": {
-                            "required": "N",
-                            "errorMessage": "Please select a valid relationship."
-                        }
-                    },
-                    {
-                        "key": "designation",
-                        "label": "Designation",
-                        "placeholder": "Select Designation",
-                        "nonInputLabel": "NoN Input Label",
-                        "fieldType": "checkbox",
-                        "dropdownOptions": [
-                            { "label": "Spouse", "value": "1" },
-                            { "label": "Sibling", "value": "2" },
-                            { "label": "Parent or Guardian", "value": "3" },
-                            { "label": "Others", "value": "4" }
-                        ],
-                        "validation": {
-                            "required": "N",
-                            "errorMessage": "Please select a valid relationship."
-                        }
-                    },
-                    {
-                        "key": "designation",
-                        "label": "Designation",
-                        "placeholder": "Select Designation",
-                        "fieldType": "dropdown",
-                        "dropdownOptions": [
-                            { "label": "Spouse", "value": "1" },
-                            { "label": "Sibling", "value": "2" },
-                            { "label": "Parent or Guardian", "value": "3" },
-                            { "label": "Others", "value": "4" }
-                        ],
-                        "validation": {
-                            "required": "N",
-                            "errorMessage": "Please select a valid relationship."
-                        }
-                    }
                 ]
             },
         ]

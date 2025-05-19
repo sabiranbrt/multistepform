@@ -17,6 +17,7 @@ interface IProps {
   value?: string;
   ValidClassName?: string;
   isSearchable?: boolean;
+  readOnly?: boolean;
   type?: string;
   placeHolder?: string;
   focusBorderColor?: string;
@@ -46,6 +47,7 @@ const CustomField = ({
   placeHolder,
   ValidClassName,
   isSearchable,
+  readOnly,
   label,
   focusErrorBorderColor = "#f94d44",
   validation,
@@ -180,7 +182,7 @@ const CustomField = ({
                     placeholder={!isFocused ? placeHolder : ""}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
-                    disabled={disabled}
+                    disabled={field.value ? readOnly : false}
                     type={type}
                     onChange={(e) => {
                       const value = e.target.value;
@@ -216,6 +218,7 @@ const CustomField = ({
                     }}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
+                    disabled={field.value ? readOnly : false}
                   >
                     <option disabled>{placeHolder}</option>
                     {options.map((opt) => (
@@ -226,6 +229,7 @@ const CustomField = ({
                   </select>
                 ) : fieldType === FieldTypes?.TEXTAREA ? (
                   <textarea
+                    disabled={field.value ? readOnly : false}
                     className={clsx(
                       `outline-0 !py-${inputHeight} !px-${inputWidth}`,
                       textClassName
@@ -252,7 +256,6 @@ const CustomField = ({
                     placeholder={!isFocused ? placeHolder : ""}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
-                    disabled={disabled}
                     onChange={(e) => {
                       const value = e.target.value;
                       field.onChange(value);
@@ -271,6 +274,7 @@ const CustomField = ({
                             "whitespace-nowrap",
                             labelClassName ? labelClassName : " text-gray-500"
                           )}
+                          disabled={field.value ? readOnly : false}
                           type="checkbox"
                           onSelect={field.value}
                           onChange={field.onChange}
@@ -294,9 +298,12 @@ const CustomField = ({
                         className=" flex flex-row items-center gap-2 flex-nowrap"
                       >
                         <input
+                          disabled={field.value ? readOnly : false}
                           type="radio"
                           value={opt.value}
-                          checked={field.value === opt.value}
+                          checked={
+                            (field.value ?? options[0]?.value) === opt.value
+                          }
                           onChange={() => field.onChange(opt.value)}
                         />
                         <label
@@ -339,7 +346,7 @@ const CustomField = ({
                       placeholder={!isFocused ? placeHolder : ""}
                       onFocus={handleFocus}
                       onBlur={handleBlur}
-                      disabled={disabled}
+                      disabled={field.value ? readOnly : false}
                       type={inputType}
                       onChange={(e) => {
                         const value = e.target.value;
@@ -393,7 +400,7 @@ const CustomField = ({
                       placeholder={!isFocused ? placeHolder : ""}
                       onFocus={handleFocus}
                       onBlur={handleBlur}
-                      disabled={disabled}
+                      disabled={field.value ? readOnly : false}
                       type={type ? type : "file"}
                       onChange={(e) => {
                         const value = e.target.value;
@@ -437,7 +444,7 @@ const CustomField = ({
                           ? textSecurity.repeat(realValue.length)
                           : realValue
                       }
-                      disabled={disabled}
+                      disabled={field.value ? readOnly : false}
                       type={inputType}
                       onChange={(e) => {
                         const input = e.target.value;
@@ -468,7 +475,7 @@ const CustomField = ({
                   </div>
                 ) : fieldType === FieldTypes?.MULTISELECT ? (
                   <Select
-                    isDisabled={false}
+                    isDisabled={field.value ? readOnly : false}
                     isSearchable={isSearchable}
                     placeholder={placeHolder}
                     styles={customStyles}
