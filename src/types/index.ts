@@ -7,7 +7,8 @@ export const FieldTypes = {
   RADIOBUTTON: "radio",
   PASSFIELD: 'password',
   FILE: "file",
-  CUSTOMPASS: "custompass"
+  CUSTOMPASS: "custompass",
+  MULTISELECT: "multiSelect",
 } as const;
 
 type FieldTypes = keyof typeof FieldTypes;
