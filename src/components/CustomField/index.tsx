@@ -1,12 +1,11 @@
 import clsx from "clsx";
 import { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import Label from "../label";
+import { FaEye, FaEyeSlash, FaFileImage } from "react-icons/fa";
+import Select from "react-select";
 import { FieldTypes, type ValidationProps } from "../../types";
 import { ValidationRules } from "../../utils/ValidationRegister";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
-import { FaFileImage } from "react-icons/fa";
+import Label from "../label";
 
 interface Options {
   label: string;
@@ -17,6 +16,8 @@ interface IProps {
   names: string;
   value?: string;
   ValidClassName?: string;
+  isSearchable?: boolean;
+  readOnly?: boolean;
   type?: string;
   placeHolder?: string;
   focusBorderColor?: string;
@@ -45,6 +46,8 @@ const CustomField = ({
   inputWidth = "2",
   placeHolder,
   ValidClassName,
+  isSearchable,
+  readOnly,
   label,
   focusErrorBorderColor = "#f94d44",
   validation,
@@ -90,6 +93,34 @@ const CustomField = ({
   const inputType =
     type === "password" ? (tooglePassword ? "password" : "text") : type;
 
+  const customStyles = {
+    control: (provided: any, state: any) => {
+      const hasError = errors && errors[names];
+
+      return {
+        ...provided,
+        borderColor: hasError
+          ? focusErrorBorderColor
+          : state.isFocused
+          ? focusBorderColor ?? "#5081B9"
+          : "#F2F2F2",
+        backgroundColor: hasError
+          ? focusErrorBgColor ?? "#FFF2F2"
+          : !state.isFocused
+          ? "#F7F7F7"
+          : provided.backgroundColor,
+        boxShadow: hasError
+          ? `0 1px 2px 0 ${focusErrorShadowColor}`
+          : state.isFocused
+          ? `0 1px 2px 0 ${focusShadowColor}`
+          : undefined,
+        padding: `${inputHeight}px ${inputWidth}px !important`,
+        borderRadius: 4,
+        margin: "0 !important",
+      };
+    },
+  };
+
   return (
     <div>
       <Controller
@@ -126,25 +157,32 @@ const CustomField = ({
                 {fieldType === FieldTypes?.TEXTFIELD ? (
                   <input
                     className={clsx(
-                      `outline-0 ${
-                        !isFocused && !errors[names]
-                          ? "border bg-[#F7F7F7] border-[#F2F2F2]"
-                          : ""
-                      } rounded-sm !py-${inputHeight} !px-${inputWidth}`,
-                      isFocused &&
-                        `!border !border-[${
-                          focusBorderColor ? focusBorderColor : "#5081B9"
-                        }] shadow-sm shadow-[${focusShadowColor}]`,
-                      errors[names]
-                        ? `border !border-[${focusErrorBorderColor}] shadow-sm shadow-[${focusErrorShadowColor}] bg-[${
-                            focusErrorBgColor ?? "#FFF2F2"
-                          }]`
-                        : ""
+                      `outline-0 !py-${inputHeight} !px-${inputWidth}`,
+                      textClassName
+                        ? textClassName
+                        : "bg-[#F7F7F7] rounded-sm border border-[#F2F2F2]"
                     )}
+                    style={{
+                      borderColor: errors[names]
+                        ? focusErrorBorderColor
+                        : isFocused
+                        ? focusBorderColor ?? "#5081B9"
+                        : "#F2F2F2",
+                      backgroundColor: errors[names]
+                        ? focusErrorBgColor ?? "#FFF2F2"
+                        : !isFocused
+                        ? "#F7F7F7"
+                        : undefined,
+                      boxShadow: errors[names]
+                        ? `0 1px 2px 0 ${focusErrorShadowColor}`
+                        : isFocused
+                        ? `0 1px 2px 0 ${focusShadowColor}`
+                        : undefined,
+                    }}
                     placeholder={!isFocused ? placeHolder : ""}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
-                    disabled={disabled}
+                    disabled={field.value ? readOnly : false}
                     type={type}
                     onChange={(e) => {
                       const value = e.target.value;
@@ -156,16 +194,31 @@ const CustomField = ({
                   <select
                     defaultValue={placeHolder}
                     className={clsx(
-                      "outline-0",
+                      `outline-0 !py-${inputHeight} !px-${inputWidth}`,
                       textClassName
                         ? textClassName
-                        : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]",
-                      isFocused
-                        ? "border !border-[#5081B9] shadow-sm shadow-[#F2F2F2]"
-                        : focusBorderColor
+                        : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]"
                     )}
+                    style={{
+                      borderColor: errors[names]
+                        ? focusErrorBorderColor
+                        : isFocused
+                        ? focusBorderColor ?? "#5081B9"
+                        : "#F2F2F2",
+                      backgroundColor: errors[names]
+                        ? focusErrorBgColor ?? "#FFF2F2"
+                        : !isFocused
+                        ? "#F7F7F7"
+                        : undefined,
+                      boxShadow: errors[names]
+                        ? `0 1px 2px 0 ${focusErrorShadowColor}`
+                        : isFocused
+                        ? `0 1px 2px 0 ${focusShadowColor}`
+                        : undefined,
+                    }}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
+                    disabled={field.value ? readOnly : false}
                   >
                     <option disabled>{placeHolder}</option>
                     {options.map((opt) => (
@@ -176,19 +229,33 @@ const CustomField = ({
                   </select>
                 ) : fieldType === FieldTypes?.TEXTAREA ? (
                   <textarea
+                    disabled={field.value ? readOnly : false}
                     className={clsx(
-                      "outline-0",
+                      `outline-0 !py-${inputHeight} !px-${inputWidth}`,
                       textClassName
                         ? textClassName
-                        : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]",
-                      isFocused
-                        ? "border !border-[#5081B9] shadow-sm shadow-[#F2F2F2]"
-                        : focusBorderColor
+                        : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]"
                     )}
+                    style={{
+                      borderColor: errors[names]
+                        ? focusErrorBorderColor
+                        : isFocused
+                        ? focusBorderColor ?? "#5081B9"
+                        : "#F2F2F2",
+                      backgroundColor: errors[names]
+                        ? focusErrorBgColor ?? "#FFF2F2"
+                        : !isFocused
+                        ? "#F7F7F7"
+                        : undefined,
+                      boxShadow: errors[names]
+                        ? `0 1px 2px 0 ${focusErrorShadowColor}`
+                        : isFocused
+                        ? `0 1px 2px 0 ${focusShadowColor}`
+                        : undefined,
+                    }}
                     placeholder={!isFocused ? placeHolder : ""}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
-                    disabled={disabled}
                     onChange={(e) => {
                       const value = e.target.value;
                       field.onChange(value);
@@ -207,6 +274,7 @@ const CustomField = ({
                             "whitespace-nowrap",
                             labelClassName ? labelClassName : " text-gray-500"
                           )}
+                          disabled={field.value ? readOnly : false}
                           type="checkbox"
                           onSelect={field.value}
                           onChange={field.onChange}
@@ -230,9 +298,12 @@ const CustomField = ({
                         className=" flex flex-row items-center gap-2 flex-nowrap"
                       >
                         <input
+                          disabled={field.value ? readOnly : false}
                           type="radio"
                           value={opt.value}
-                          checked={field.value === opt.value}
+                          checked={
+                            (field.value ?? options[0]?.value) === opt.value
+                          }
                           onChange={() => field.onChange(opt.value)}
                         />
                         <label
@@ -250,18 +321,32 @@ const CustomField = ({
                   <div className="relative">
                     <input
                       className={clsx(
-                        "outline-0",
+                        `outline-0 !py-${inputHeight} !px-${inputWidth}`,
                         textClassName
                           ? textClassName
-                          : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]",
-                        isFocused
-                          ? "border !border-[#5081B9] shadow-sm shadow-[#F2F2F2]"
-                          : focusBorderColor
+                          : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]"
                       )}
+                      style={{
+                        borderColor: errors[names]
+                          ? focusErrorBorderColor
+                          : isFocused
+                          ? focusBorderColor ?? "#5081B9"
+                          : "#F2F2F2",
+                        backgroundColor: errors[names]
+                          ? focusErrorBgColor ?? "#FFF2F2"
+                          : !isFocused
+                          ? "#F7F7F7"
+                          : undefined,
+                        boxShadow: errors[names]
+                          ? `0 1px 2px 0 ${focusErrorShadowColor}`
+                          : isFocused
+                          ? `0 1px 2px 0 ${focusShadowColor}`
+                          : undefined,
+                      }}
                       placeholder={!isFocused ? placeHolder : ""}
                       onFocus={handleFocus}
                       onBlur={handleBlur}
-                      disabled={disabled}
+                      disabled={field.value ? readOnly : false}
                       type={inputType}
                       onChange={(e) => {
                         const value = e.target.value;
@@ -284,10 +369,7 @@ const CustomField = ({
                       "outline-0",
                       textClassName
                         ? textClassName
-                        : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]",
-                      isFocused
-                        ? "border !border-[#5081B9] shadow-sm shadow-[#F2F2F2]"
-                        : focusBorderColor
+                        : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]"
                     )}
                   >
                     <label
@@ -318,7 +400,7 @@ const CustomField = ({
                       placeholder={!isFocused ? placeHolder : ""}
                       onFocus={handleFocus}
                       onBlur={handleBlur}
-                      disabled={disabled}
+                      disabled={field.value ? readOnly : false}
                       type={type ? type : "file"}
                       onChange={(e) => {
                         const value = e.target.value;
@@ -332,14 +414,28 @@ const CustomField = ({
                   <div className="relative">
                     <input
                       className={clsx(
-                        "outline-0",
+                        `outline-0 !py-${inputHeight} !px-${inputWidth}`,
                         textClassName
                           ? textClassName
-                          : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]",
-                        isFocused
-                          ? "border !border-[#5081B9] shadow-sm shadow-[#F2F2F2]"
-                          : focusBorderColor
+                          : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]"
                       )}
+                      style={{
+                        borderColor: errors[names]
+                          ? focusErrorBorderColor
+                          : isFocused
+                          ? focusBorderColor ?? "#5081B9"
+                          : "#F2F2F2",
+                        backgroundColor: errors[names]
+                          ? focusErrorBgColor ?? "#FFF2F2"
+                          : !isFocused
+                          ? "#F7F7F7"
+                          : undefined,
+                        boxShadow: errors[names]
+                          ? `0 1px 2px 0 ${focusErrorShadowColor}`
+                          : isFocused
+                          ? `0 1px 2px 0 ${focusShadowColor}`
+                          : undefined,
+                      }}
                       placeholder={!isFocused ? placeHolder : ""}
                       onFocus={handleFocus}
                       onBlur={handleBlur}
@@ -348,7 +444,7 @@ const CustomField = ({
                           ? textSecurity.repeat(realValue.length)
                           : realValue
                       }
-                      disabled={disabled}
+                      disabled={field.value ? readOnly : false}
                       type={inputType}
                       onChange={(e) => {
                         const input = e.target.value;
@@ -377,6 +473,20 @@ const CustomField = ({
                       </div>
                     )}
                   </div>
+                ) : fieldType === FieldTypes?.MULTISELECT ? (
+                  <Select
+                    isDisabled={field.value ? readOnly : false}
+                    isSearchable={isSearchable}
+                    placeholder={placeHolder}
+                    styles={customStyles}
+                    isMulti
+                    onChange={(value) => {
+                      field.onChange(value);
+                    }}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    options={options}
+                  />
                 ) : null}
               </div>
               {errors[names] && (
