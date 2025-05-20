@@ -1,7 +1,7 @@
 export const JsonFormat = [
     {
         "layout": "horizontallayout",
-        "colGrid": "4",
+        "colGrid": "3",
         "gapCol": "40",
         "gapRow": "20",
         "section": [
@@ -10,6 +10,7 @@ export const JsonFormat = [
                 "displayRemarks": "Please provide personal information",
                 "errorColor": "#ff4d4f",
                 "focusErrorBgColor": "#DCFFDB",
+                "focusErrorBorderColor": "#008000",
                 "nos": "1",
                 "displayField": [
                     {
@@ -17,9 +18,10 @@ export const JsonFormat = [
                         "label": "Full Name",
                         "placeholder": "Enter your full name",
                         "fieldType": "text",
+                        "placeHoldercolor": "#000",
                         "readOnly": true,
                         "validation": {
-                            "required": "Y",
+                            "required": "N",
                             "pattern": "^[A-Za-z]{2,50}$",
                             "errorMessage": "Name must be 2-50 characters and contain only letters and spaces."
                         }
@@ -31,7 +33,7 @@ export const JsonFormat = [
                         "fieldType": "text",
                         "subType": "date",
                         "validation": {
-                            "required": "Y",
+                            "required": "N",
                             "errorMessage": "Select date of birth"
                         }
                     },
@@ -42,7 +44,7 @@ export const JsonFormat = [
                         "fieldType": "text",
                         "textSecurity": "$",
                         "validation": {
-                            "required": "Y",
+                            "required": "N",
                             "errorMessage": "Name must be 2-50 characters and contain only letters and spaces."
                         }
                     },
@@ -53,7 +55,7 @@ export const JsonFormat = [
                         "fieldType": "text",
                         "subType": "number",
                         "validation": {
-                            "required": "Y",
+                            "required": "N",
                             "pattern": "^[6-9]\\d{9}$",
                             "errorMessage": "Enter a valid 10-digit mobile number starting with 6-9."
                         }
@@ -64,7 +66,7 @@ export const JsonFormat = [
                         "placeholder": "Enter your profession",
                         "fieldType": "text",
                         "validation": {
-                            "required": "Y",
+                            "required": "N",
                             "errorMessage": "Address Line 1 must be between 5 and 100 characters."
                         }
                     },
@@ -79,7 +81,7 @@ export const JsonFormat = [
                             { "label": "Female", "value": "Female" },
                         ],
                         "validation": {
-                            "required": "Y",
+                            "required": "N",
                             "errorMessage": "Please select a valid relationship."
                         }
                     },
@@ -95,7 +97,7 @@ export const JsonFormat = [
                             { "label": "Others", "value": "4" }
                         ],
                         "validation": {
-                            "required": "Y",
+                            "required": "N",
                             "errorMessage": "Please select a valid relationship."
                         }
                     },
@@ -111,7 +113,7 @@ export const JsonFormat = [
                             { "label": "Others", "value": "4" }
                         ],
                         "validation": {
-                            "required": "Y",
+                            "required": "N",
                             "errorMessage": "Please select a valid relationship."
                         }
                     },
@@ -121,6 +123,9 @@ export const JsonFormat = [
                         "placeholder": "Select Multiple",
                         "fieldType": "multiSelect",
                         "isSearchable": true,
+                        "placeHoldercolor": "#000",
+                        "placeHolderSize": "16",
+
                         "dropdownOptions": [
                             { "label": "Spouse", "value": "1" },
                             { "label": "Sibling", "value": "2" },
@@ -128,7 +133,7 @@ export const JsonFormat = [
                             { "label": "Others", "value": "4" }
                         ],
                         "validation": {
-                            "required": "Y",
+                            "required": "N",
                             "errorMessage": "Please select a valid relationship."
                         }
                     },
@@ -139,7 +144,7 @@ export const JsonFormat = [
                         "fieldType": "file",
                         "nonInputLabel": "Choose Gender",
                         "validation": {
-                            "required": "Y",
+                            "required": "N",
                             "errorMessage": "Please select a valid relationship."
                         }
                     }
@@ -157,7 +162,7 @@ export const JsonFormat = [
                         "placeholder": "Enter Country Name",
                         "fieldType": "text",
                         "validation": {
-                            "required": "Y",
+                            "required": "N",
                             "errorMessage": "Must Enter county name"
                         }
                     },
@@ -173,7 +178,7 @@ export const JsonFormat = [
                             { "label": "Others", "value": "4" }
                         ],
                         "validation": {
-                            "required": "Y",
+                            "required": "N",
                             "errorMessage": "Please select a valid relationship."
                         }
                     },
@@ -191,7 +196,7 @@ export const JsonFormat = [
                         "placeholder": "Enter Stret Name",
                         "fieldType": "text",
                         "validation": {
-                            "required": "Y",
+                            "required": "N",
                             "errorMessage": "Name must be 2-50 characters and contain only letters and spaces."
                         }
                     },

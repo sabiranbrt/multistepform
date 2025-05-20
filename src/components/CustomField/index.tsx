@@ -1,8 +1,11 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { FaEye, FaEyeSlash, FaFileImage } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Select from "react-select";
+import Cross from "../../assets/icons/cross.svg";
+import File from "../../assets/icons/file.svg";
+import Upload from "../../assets/icons/upload.svg";
 import { FieldTypes, type ValidationProps } from "../../types";
 import { ValidationRules } from "../../utils/ValidationRegister";
 import Label from "../label";
@@ -19,8 +22,17 @@ interface IProps {
   isSearchable?: boolean;
   readOnly?: boolean;
   type?: string;
+  OptionSelectColor?: string;
+  OptionFocusColor?: string;
+  OptionTextColor?: string;
+  optionFontSize?: string;
+  UploadIcon?: string;
+  FileIcon?: string;
+  CrossIcon?: string;
   placeHolder?: string;
+  placeHolderSize?: string;
   focusBorderColor?: string;
+  placeHoldercolor?: string;
   focusShadowColor?: string;
   focusErrorBorderColor?: string;
   focusErrorBgColor?: string;
@@ -28,6 +40,7 @@ interface IProps {
   label: string;
   inputHeight?: string;
   inputWidth?: string;
+  placeHolderStyle?: string;
   disabled?: boolean;
   onChange?: (text: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeArea?: (text: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -42,23 +55,31 @@ interface IProps {
 
 const CustomField = ({
   names,
-  inputHeight = "3",
-  inputWidth = "2",
+  inputHeight = "10",
+  inputWidth = "10",
   placeHolder,
   ValidClassName,
+  OptionSelectColor,
   isSearchable,
+  UploadIcon,
+  OptionFocusColor,
+  optionFontSize,
   readOnly,
+  CrossIcon,
+  FileIcon,
   label,
   focusErrorBorderColor = "#f94d44",
   validation,
   onChange,
   labelClassName,
   nonlabelClassName,
+  placeHolderSize,
+  placeHoldercolor,
+  OptionTextColor,
   focusBorderColor,
   focusShadowColor = "#F2F2F2",
   focusErrorBgColor,
   focusErrorShadowColor = "#F2F2F2",
-  disabled,
   textClassName,
   type,
   fieldType,
@@ -76,6 +97,14 @@ const CustomField = ({
   const [tooglePassword, setTogglePassword] = useState(false);
   const [realValue, setRealValue] = useState("");
   const [selectFile, setSelectedFile] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleRemoveFile = () => {
+    setSelectedFile("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -114,9 +143,42 @@ const CustomField = ({
           : state.isFocused
           ? `0 1px 2px 0 ${focusShadowColor}`
           : undefined,
-        padding: `${inputHeight}px ${inputWidth}px !important`,
+        paddingBlock: `${inputHeight}px`,
+        paddingInline: `${inputWidth}px`,
         borderRadius: 4,
+        whiteSpace: "nowrap",
         margin: "0 !important",
+      };
+    },
+    placeholder: (provided: any, state: any) => {
+      const hasError = errors && errors[names];
+      const isFocused = state.isFocused;
+
+      return {
+        ...provided,
+        color: hasError
+          ? "#D32F2F"
+          : isFocused
+          ? "#5081B9"
+          : placeHoldercolor ?? "#A0A0A0",
+        fontSize: `${placeHolderSize}px`,
+      };
+    },
+    option: (provided: any, state: any) => {
+      return {
+        ...provided,
+        backgroundColor: state.isSelected
+          ? OptionSelectColor ?? "#5081B9"
+          : state.isFocused
+          ? `${OptionSelectColor ?? "#5081B9"}`
+          : "#fff",
+        color: state.isSelected
+          ? OptionTextColor ?? "#000"
+          : state.isFocused
+          ? OptionFocusColor ?? "#fff"
+          : "#000",
+        fontSize: `${optionFontSize ?? 14}px`,
+        cursor: "pointer",
       };
     },
   };
@@ -157,10 +219,11 @@ const CustomField = ({
                 {fieldType === FieldTypes?.TEXTFIELD ? (
                   <input
                     className={clsx(
-                      `outline-0 !py-${inputHeight} !px-${inputWidth}`,
+                      "outline-0",
                       textClassName
                         ? textClassName
-                        : "bg-[#F7F7F7] rounded-sm border border-[#F2F2F2]"
+                        : "bg-[#F7F7F7] rounded-sm border border-[#F2F2F2]",
+                      `placeholder:text-[${placeHoldercolor}] placeholder:text-[${placeHolderSize}]`
                     )}
                     style={{
                       borderColor: errors[names]
@@ -178,6 +241,8 @@ const CustomField = ({
                         : isFocused
                         ? `0 1px 2px 0 ${focusShadowColor}`
                         : undefined,
+                      paddingBlock: `${inputHeight}px`,
+                      paddingInline: `${inputWidth}px`,
                     }}
                     placeholder={!isFocused ? placeHolder : ""}
                     onFocus={handleFocus}
@@ -191,50 +256,38 @@ const CustomField = ({
                     }}
                   />
                 ) : fieldType === FieldTypes?.SELECTFIELD ? (
-                  <select
-                    defaultValue={placeHolder}
-                    className={clsx(
-                      `outline-0 !py-${inputHeight} !px-${inputWidth}`,
-                      textClassName
-                        ? textClassName
-                        : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]"
-                    )}
-                    style={{
-                      borderColor: errors[names]
-                        ? focusErrorBorderColor
-                        : isFocused
-                        ? focusBorderColor ?? "#5081B9"
-                        : "#F2F2F2",
-                      backgroundColor: errors[names]
-                        ? focusErrorBgColor ?? "#FFF2F2"
-                        : !isFocused
-                        ? "#F7F7F7"
-                        : undefined,
-                      boxShadow: errors[names]
-                        ? `0 1px 2px 0 ${focusErrorShadowColor}`
-                        : isFocused
-                        ? `0 1px 2px 0 ${focusShadowColor}`
-                        : undefined,
+                  <Select
+                    isDisabled={field.value ? readOnly : false}
+                    isSearchable={false}
+                    placeholder={!isFocused ? placeHolder : ""}
+                    styles={customStyles}
+                    theme={(theme) => ({
+                      ...theme,
+                      borderRadius: 0,
+                      colors: {
+                        ...theme.colors,
+                        primary25: `${
+                          OptionSelectColor ? OptionSelectColor : "#5081B9"
+                        }`,
+                        primary: "#F2F2F2",
+                      },
+                    })}
+                    onChange={(value) => {
+                      field.onChange(value);
                     }}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
-                    disabled={field.value ? readOnly : false}
-                  >
-                    <option disabled>{placeHolder}</option>
-                    {options.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
+                    options={options}
+                  />
                 ) : fieldType === FieldTypes?.TEXTAREA ? (
                   <textarea
                     disabled={field.value ? readOnly : false}
                     className={clsx(
-                      `outline-0 !py-${inputHeight} !px-${inputWidth}`,
+                      `outline-0 !py-${inputHeight} !px-${inputWidth} md:!p-2 sm:!p-2`,
                       textClassName
                         ? textClassName
-                        : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]"
+                        : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]",
+                      `placeholder:text-[${placeHoldercolor}] placeholder:text-[${placeHolderSize}]`
                     )}
                     style={{
                       borderColor: errors[names]
@@ -321,10 +374,11 @@ const CustomField = ({
                   <div className="relative">
                     <input
                       className={clsx(
-                        `outline-0 !py-${inputHeight} !px-${inputWidth}`,
+                        `outline-0 !py-${inputHeight} !px-${inputWidth} md:!p-2 sm:!p-2`,
                         textClassName
                           ? textClassName
-                          : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]"
+                          : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]",
+                        `placeholder:text-[${placeHoldercolor}] placeholder:text-[${placeHolderSize}]`
                       )}
                       style={{
                         borderColor: errors[names]
@@ -364,60 +418,89 @@ const CustomField = ({
                     )}
                   </div>
                 ) : fieldType === FieldTypes?.FILE ? (
-                  <div
-                    className={clsx(
-                      "outline-0",
-                      textClassName
-                        ? textClassName
-                        : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]"
-                    )}
-                  >
-                    <label
-                      htmlFor="file-upload"
-                      className=" flex flex-col items-center gap-1.5"
-                    >
-                      <FaFileImage className=" h-10 w-10" />
-                      <p>Upload File</p>
-                      <p>{selectFile}</p>
-                    </label>
-                    <input
-                      id="file-upload"
-                      style={{ display: "none" }}
+                  <div className=" flex flex-col items-center">
+                    <div
                       className={clsx(
-                        "outline-0",
+                        `outline-0 !py-${inputHeight} !px-${inputWidth} md:!p-2 sm:!p-2 w-full`,
                         textClassName
                           ? textClassName
-                          : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]",
-                        isFocused
-                          ? "border !border-[#5081B9] shadow-sm shadow-[#F2F2F2]"
-                          : focusBorderColor,
-                        !focusErrorBorderColor
-                          ? errors[names]
-                            ? "border !border-[#f94d44] shadow-sm shadow-[#F2F2F2] bg-[#FFF2F2]"
-                            : focusErrorBorderColor
-                          : ""
+                          : " !px-2 !py-3 rounded-sm border-dotted border-2 border-[#F2F2F2]",
+                        `placeholder:text-[${placeHoldercolor}] placeholder:text-[${placeHolderSize}]`
                       )}
-                      placeholder={!isFocused ? placeHolder : ""}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                      disabled={field.value ? readOnly : false}
-                      type={type ? type : "file"}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        field.onChange(value);
-                        setSelectedFile(value);
-                        if (onChange) onChange(e);
-                      }}
-                    />
+                    >
+                      <label
+                        htmlFor="file-upload"
+                        className=" flex flex-col items-center gap-1.5"
+                      >
+                        <img
+                          src={UploadIcon ? UploadIcon : Upload}
+                          width={50}
+                          height={50}
+                        />
+                        <p className=" !p-2 bg-[#5081B9] text-white rounded-md">
+                          Upload File
+                        </p>
+                      </label>
+                      <input
+                        ref={fileInputRef}
+                        id="file-upload"
+                        style={{ display: "none" }}
+                        className={clsx(
+                          "outline-0",
+                          textClassName
+                            ? textClassName
+                            : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]",
+                          isFocused
+                            ? "border !border-[#5081B9] shadow-sm shadow-[#F2F2F2]"
+                            : focusBorderColor,
+                          !focusErrorBorderColor
+                            ? errors[names]
+                              ? "border !border-[#f94d44] shadow-sm shadow-[#F2F2F2] bg-[#FFF2F2]"
+                              : focusErrorBorderColor
+                            : ""
+                        )}
+                        placeholder={!isFocused ? placeHolder : ""}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        disabled={field.value ? readOnly : false}
+                        type={type ? type : "file"}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value);
+                          setSelectedFile(value);
+                          if (onChange) onChange(e);
+                        }}
+                      />
+                    </div>
+                    {selectFile && (
+                      <div className=" flex flex-row items-center gap-2">
+                        <div className="flex flex-row items-center gap-2 !mt-2">
+                          <img
+                            src={FileIcon ? FileIcon : File}
+                            width={30}
+                            height={30}
+                          />
+                          <p className=" text-[12px]">{selectFile}</p>
+                        </div>
+                        <div onClick={handleRemoveFile}>
+                          <img
+                            src={CrossIcon ? CrossIcon : Cross}
+                            width={30}
+                            height={30}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ) : fieldType === FieldTypes?.CUSTOMPASS ? (
                   <div className="relative">
                     <input
                       className={clsx(
-                        `outline-0 !py-${inputHeight} !px-${inputWidth}`,
+                        `outline-0 !py-${inputHeight} !px-${inputWidth} md:!p-2 sm:!p-2`,
                         textClassName
                           ? textClassName
-                          : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]"
+                          : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]",
+                        `placeholder:text-[${placeHoldercolor}] placeholder:text-[${placeHolderSize}]`
                       )}
                       style={{
                         borderColor: errors[names]
@@ -477,8 +560,17 @@ const CustomField = ({
                   <Select
                     isDisabled={field.value ? readOnly : false}
                     isSearchable={isSearchable}
-                    placeholder={placeHolder}
+                    placeholder={!isFocused ? placeHolder : ""}
                     styles={customStyles}
+                    theme={(theme) => ({
+                      ...theme,
+                      borderRadius: 0,
+                      colors: {
+                        ...theme.colors,
+                        primary25: "hotpink",
+                        primary: "black",
+                      },
+                    })}
                     isMulti
                     onChange={(value) => {
                       field.onChange(value);

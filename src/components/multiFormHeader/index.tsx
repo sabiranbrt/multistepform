@@ -4,9 +4,10 @@ import { TiTick } from "react-icons/ti";
 
 interface IProp {
   currentIndex: number;
+  steps: string[];
 }
 
-const MultiFormHeader = ({ currentIndex }: IProp) => {
+const MultiFormHeader = ({ currentIndex, steps }: IProp) => {
   const currentItem = JsonFormat[0];
 
   return (
@@ -15,7 +16,7 @@ const MultiFormHeader = ({ currentIndex }: IProp) => {
         className={clsx(
           "flex items-end w-full !py-10",
           currentItem?.layout === "horizontallayout"
-            ? "flex-row gap-5 justify-center"
+            ? " items-center gap-5 md:gap-4 sm:gap-2 justify-center"
             : "gap-20 flex-col"
         )}
       >
@@ -32,10 +33,21 @@ const MultiFormHeader = ({ currentIndex }: IProp) => {
                   : ""
               )}
             >
+              {index < steps.length - 1 &&
+                currentItem?.layout === "horizontallayout" && (
+                  <div
+                    className={clsx(
+                      "h-[0.5px] w-20 2xl:w-20 xl:w-20 mx-2 md:w-10 sm:w-5",
+                      index < currentIndex ? "bg-[#5081B9]" : "bg-gray-500"
+                    )}
+                  />
+                )}
               <p
                 className={clsx(
-                  "font-semibold text-[18px]",
-                  isComplete ? "text-[#5081B9]" : "text-gray-500"
+                  "font-semibold 2xl:text-[18px] xl:text-[18px] md:text-[14px] sm:text-[12px] whitespace-nowrap",
+                  index < currentIndex || activeIndex
+                    ? "text-[#5081B9]"
+                    : "text-gray-500"
                 )}
               >
                 {item.status}
