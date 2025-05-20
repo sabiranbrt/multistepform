@@ -20,6 +20,45 @@ p {
   margin: 0 auto !important;
 }
 
-input, select, option, textarea {
+input,
+select,
+option,
+textarea {
   width: 100%;
+}
+
+.custom-grid {
+  display: grid;
+}
+
+.css-1xc3v61-indicatorContainer {
+  padding: 0 !important;
+}
+
+.css-19bb58m {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.css-11gilgj-control {
+  padding: 0 !important;
+}
+
+.css-15lsz6c-indicatorContainer {
+  padding: 0 !important;
+}
+
+.css-1odecth-control {
+  background: none !important;
+}
+
+@media (max-width: 1200px) {
+  .custom-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 768px) {
+  .custom-grid {
+    grid-template-columns: repeat(1, 1fr) !important;
+  }
 }/*# sourceMappingURL=main.css.map */
