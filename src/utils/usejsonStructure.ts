@@ -8,9 +8,6 @@ export const JsonFormat = [
             {
                 "status": "Personal Information",
                 "displayRemarks": "Please provide personal information",
-                "errorColor": "#ff4d4f",
-                "focusErrorBgColor": "#DCFFDB",
-                "focusErrorBorderColor": "#008000",
                 "nos": "1",
                 "displayField": [
                     {
@@ -18,10 +15,13 @@ export const JsonFormat = [
                         "label": "Full Name",
                         "placeholder": "Enter your full name",
                         "fieldType": "text",
+                        "focusErrorBorderColor": "#008000",
+                        "errorColor": "#ff4d4f",
+                        "focusErrorBgColor": "#DCFFDB",
                         "placeHoldercolor": "#000",
                         "readOnly": true,
                         "validation": {
-                            "required": "N",
+                            "required": "Y",
                             "pattern": "^[A-Za-z]{2,50}$",
                             "errorMessage": "Name must be 2-50 characters and contain only letters and spaces."
                         }
@@ -33,7 +33,7 @@ export const JsonFormat = [
                         "fieldType": "text",
                         "subType": "date",
                         "validation": {
-                            "required": "N",
+                            "required": "Y",
                             "errorMessage": "Select date of birth"
                         }
                     },
@@ -106,6 +106,10 @@ export const JsonFormat = [
                         "label": "Designation",
                         "placeholder": "Select Designation",
                         "fieldType": "dropdown",
+                        "OptionFocusColor": "#fff",
+                        "OptionTextColor": "#fff",
+                        // "OptionSelectColor": "#000",
+                        // "OptionSelectFocusColor": "#000",
                         "dropdownOptions": [
                             { "label": "Spouse", "value": "1" },
                             { "label": "Sibling", "value": "2" },
@@ -125,7 +129,6 @@ export const JsonFormat = [
                         "isSearchable": true,
                         "placeHoldercolor": "#000",
                         "placeHolderSize": "16",
-
                         "dropdownOptions": [
                             { "label": "Spouse", "value": "1" },
                             { "label": "Sibling", "value": "2" },

@@ -25,7 +25,6 @@ interface IProps {
   OptionSelectColor?: string;
   OptionFocusColor?: string;
   OptionTextColor?: string;
-  optionFontSize?: string;
   UploadIcon?: string;
   FileIcon?: string;
   CrossIcon?: string;
@@ -34,6 +33,7 @@ interface IProps {
   focusBorderColor?: string;
   placeHoldercolor?: string;
   focusShadowColor?: string;
+  OptionSelectFocusColor?: string;
   focusErrorBorderColor?: string;
   focusErrorBgColor?: string;
   focusErrorShadowColor?: string;
@@ -59,11 +59,11 @@ const CustomField = ({
   inputWidth = "10",
   placeHolder,
   ValidClassName,
-  OptionSelectColor,
+  OptionSelectColor = "#5081B9",
+  OptionSelectFocusColor = "#5081B9",
   isSearchable,
   UploadIcon,
-  OptionFocusColor,
-  optionFontSize,
+  OptionFocusColor = "#fff",
   readOnly,
   CrossIcon,
   FileIcon,
@@ -75,7 +75,7 @@ const CustomField = ({
   nonlabelClassName,
   placeHolderSize,
   placeHoldercolor,
-  OptionTextColor,
+  OptionTextColor = "#000",
   focusBorderColor,
   focusShadowColor = "#F2F2F2",
   focusErrorBgColor,
@@ -168,16 +168,14 @@ const CustomField = ({
       return {
         ...provided,
         backgroundColor: state.isSelected
-          ? OptionSelectColor ?? "#5081B9"
-          : state.isFocused
-          ? `${OptionSelectColor ?? "#5081B9"}`
-          : "#fff",
+          ? OptionSelectColor
+          : state.isFocused && `${OptionSelectFocusColor}`,
         color: state.isSelected
-          ? OptionTextColor ?? "#000"
+          ? OptionTextColor
           : state.isFocused
-          ? OptionFocusColor ?? "#fff"
+          ? OptionFocusColor
           : "#000",
-        fontSize: `${optionFontSize ?? 14}px`,
+        // fontSize: `${optionFontSize ?? 14}px`,
         cursor: "pointer",
       };
     },

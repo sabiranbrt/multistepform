@@ -3,10 +3,11 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { default as CustomField } from "./components/CustomField";
 import MultiFormHeader from "./components/multiFormHeader";
-import { JsonFormat } from "./utils/usejsonStructure";
+import data from "./utils/structure.json";
 
 const StepForm = () => {
   const [index, setIndex] = useState(0);
+  const json = data;
 
   const methods = useForm<any>({
     mode: "onChange",
@@ -18,8 +19,68 @@ const StepForm = () => {
     console.log("SUBMITTED");
   };
 
-  const currentItem = JsonFormat[0];
-  const currentSection = currentItem?.section[index];
+  const render = () => {
+    const stepKeys = Object.keys(json.dataFields) as Array<
+      keyof typeof json.dataFields
+    >;
+    const currentKey = stepKeys[index];
+    const currentStep = json.dataFields[currentKey];
+
+    if (!Array.isArray(currentStep)) {
+      return currentStep?.displayField?.map((displaylist: any) => (
+        <CustomField
+          key={displaylist.key}
+          names={displaylist.key}
+          label={displaylist.label}
+          type={displaylist.subType}
+          isSearchable={displaylist?.isSearchable}
+          OptionFocusColor={displaylist?.OptionFocusColor}
+          OptionTextColor={displaylist?.OptionTextColor}
+          OptionSelectFocusColor={displaylist?.OptionSelectFocusColor}
+          OptionSelectColor={displaylist?.OptionSelectColor}
+          placeHoldercolor={displaylist?.placeHoldercolor}
+          placeHolderSize={displaylist?.placeHolderSize}
+          focusErrorBgColor={displaylist?.focusErrorBgColor}
+          focusErrorBorderColor={displaylist?.focusErrorBorderColor}
+          placeHolder={displaylist?.placeholder}
+          fieldType={displaylist?.fieldType}
+          options={displaylist?.dropdownOptions}
+          validation={{
+            required: displaylist?.validation.required,
+            pattern: displaylist?.validation.pattern,
+            errorMessage: displaylist?.validation.errorMessage,
+          }}
+        />
+      ));
+    }
+
+    return null;
+  };
+
+  const statusName = () => {
+    const stepKeys = Object.keys(json.dataFields) as Array<
+      keyof typeof json.dataFields
+    >;
+    const currentKey = stepKeys[index];
+    const currentStep = json.dataFields[currentKey];
+
+    if (!Array.isArray(currentStep)) {
+      return (
+        <h1
+          className={clsx(
+            " font-semibold text-[20px] !mb-5 text-[#5081B9] uppercase border-b border-gray-300 !pb-5",
+            json.formTitle === "center"
+              ? "text-center"
+              : json.formTitle === "end" && "text-end"
+          )}
+        >
+          {currentStep?.status}
+        </h1>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <div className=" h-dvh">
@@ -27,13 +88,13 @@ const StepForm = () => {
         <div
           className={clsx(
             " h-full flex-row gap-8",
-            currentItem?.layout === "horizontallayout" ? "bg-[#F2F2F2]" : "flex"
+            json?.layout === "horizontallayout" ? "bg-[#F2F2F2]" : "flex"
           )}
         >
           <div
             className={clsx(
               " relative rounded-md",
-              currentItem?.layout === "horizontallayout"
+              json?.layout === "horizontallayout"
                 ? " !p-5 text-center !mb-5"
                 : "w-[20%] !p-10 bg-[#F7F7F7]"
             )}
@@ -45,64 +106,33 @@ const StepForm = () => {
               </p>
             </div>
 
-            <MultiFormHeader
-              currentIndex={index}
-              steps={currentItem.section.map(
-                (s: any) => s.status || `Step ${s.step}`
-              )}
-            />
+            <div>
+              <MultiFormHeader currentIndex={index} />
+            </div>
           </div>
 
           <div
             className={clsx(
-              " relative flex flex-col gap-5 !px-8 !py-5",
-              currentItem?.layout === "horizontallayout"
+              " relative flex flex-col gap-5 !px-8 !py-10",
+              json?.layout === "horizontallayout"
                 ? "xl:!mx-50 lg:!mx-50 md:mx-10 shadow-xl rounded-md bg-white"
                 : "w-[80%]"
             )}
           >
-            <h1 className=" font-semibold text-[20px] text-start !mb-5 text-[#5081B9] uppercase border-b border-gray-300 !pb-5">
-              {currentSection?.status}
-            </h1>
             <div className=" text-start">
+              {statusName()}
               <div
                 className="custom-grid"
                 style={{
-                  gridTemplateColumns: `repeat(${
-                    currentItem?.colGrid ?? 3
-                  }, 1fr)`,
-                  columnGap: `${currentItem?.gapCol ?? 20}px`,
-                  rowGap: `${currentItem?.gapRow ?? 40}px`,
+                  gridTemplateColumns: `repeat(${json?.colGrid ?? 3}, 1fr)`,
+                  columnGap: `${json?.gapCol ?? 20}px`,
+                  rowGap: `${json?.gapRow ?? 40}px`,
                 }}
               >
-                {currentSection?.displayField?.map((displaylist: any) => {
-                  return (
-                    <CustomField
-                      key={displaylist.key}
-                      names={displaylist.key}
-                      label={displaylist.label}
-                      type={displaylist.subType}
-                      isSearchable={displaylist?.isSearchable}
-                      placeHoldercolor={displaylist?.placeHoldercolor}
-                      placeHolderSize={displaylist?.placeHolderSize}
-                      focusErrorBgColor={currentSection.focusErrorBgColor}
-                      focusErrorBorderColor={
-                        currentSection.focusErrorBorderColor
-                      }
-                      placeHolder={displaylist.placeholder}
-                      fieldType={displaylist.fieldType}
-                      options={displaylist.dropdownOptions}
-                      validation={{
-                        required: displaylist.validation.required,
-                        pattern: displaylist.validation.pattern,
-                        errorMessage: displaylist.validation.errorMessage,
-                      }}
-                    />
-                  );
-                })}
+                {render()}
               </div>
               <div className="flex items-center gap-5 !mt-10">
-                {index > 0 && (
+                {index > 0 && Object.keys(json?.dataFields).length !== 1 && (
                   <button
                     type="button"
                     className="bg-[#5081B9] text-white !px-4 !py-2 rounded"
@@ -111,19 +141,21 @@ const StepForm = () => {
                     Previous
                   </button>
                 )}
-                {index < currentItem?.section.length - 1 ? (
-                  <button
-                    type="button"
-                    className="bg-[#5081B9] text-white !px-4 !py-2 rounded"
-                    onClick={async () => {
-                      const isStepValid = await trigger();
-                      if (isStepValid) {
-                        setIndex((prev) => prev + 1);
-                      }
-                    }}
-                  >
-                    Next
-                  </button>
+                {index < Object.keys(json?.dataFields).length - 1 ? (
+                  Object.keys(json?.dataFields).length !== 1 && (
+                    <button
+                      type="button"
+                      className="bg-[#5081B9] text-white !px-4 !py-2 rounded"
+                      onClick={async () => {
+                        const isStepValid = await trigger();
+                        if (isStepValid) {
+                          setIndex((prev) => prev + 1);
+                        }
+                      }}
+                    >
+                      Next
+                    </button>
+                  )
                 ) : (
                   <button
                     type="submit"
