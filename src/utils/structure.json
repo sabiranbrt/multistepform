@@ -11,7 +11,6 @@
       "displayRemarks": "Please provide personal information",
       "displayField": [
         {
-          "key": "fullname",
           "label": "Full Name",
           "placeholder": "Enter your full name",
           "fieldType": "text",
@@ -58,6 +57,17 @@
             "required": "N",
             "pattern": "^[6-9]\\d{9}$",
             "errorMessage": "Enter a valid 10-digit mobile number starting with 6-9."
+          }
+        },
+        {
+          "key": "imagePreview",
+          "label": "Image Preview",
+          "placeholder": "Enter your profession",
+          "fieldType": "preview",
+          "imageLink": "www.facebook.com",
+          "validation": {
+            "required": "N",
+            "errorMessage": "Address Line 1 must be between 5 and 100 characters."
           }
         },
         {
@@ -184,8 +194,239 @@
       ]
     },
     "3": {
-      "status": "Permanent Address",
-      "displayRemarks": "Please provide permanent address details",
+      "status": "Temporary Address",
+      "displayRemarks": "Please provide temporary address details",
+      "displayField": [
+        {
+          "key": "country",
+          "label": "Country",
+          "placeholder": "Enter Country Name",
+          "errorColor": "#ff4d4f",
+          "fieldType": "text",
+          "validation": {
+            "required": "N",
+            "errorMessage": "Must Enter county name"
+          }
+        },
+        {
+          "key": "province",
+          "label": "Province",
+          "placeholder": "Select Province",
+          "fieldType": "dropdown",
+          "dropdownOptions": [
+            { "label": "Province one", "value": "1" },
+            { "label": "Province two", "value": "2" },
+            { "label": "Bagmati", "value": "3" },
+            { "label": "Others", "value": "4" }
+          ],
+          "validation": {
+            "required": "N",
+            "errorMessage": "Please select a valid relationship."
+          }
+        }
+      ]
+    },
+    "4": {
+      "status": "Temporary Address",
+      "displayRemarks": "Please provide temporary address details",
+      "displayField": [
+        {
+          "key": "country",
+          "label": "Country",
+          "placeholder": "Enter Country Name",
+          "errorColor": "#ff4d4f",
+          "fieldType": "text",
+          "validation": {
+            "required": "N",
+            "errorMessage": "Must Enter county name"
+          }
+        },
+        {
+          "key": "province",
+          "label": "Province",
+          "placeholder": "Select Province",
+          "fieldType": "dropdown",
+          "dropdownOptions": [
+            { "label": "Province one", "value": "1" },
+            { "label": "Province two", "value": "2" },
+            { "label": "Bagmati", "value": "3" },
+            { "label": "Others", "value": "4" }
+          ],
+          "validation": {
+            "required": "N",
+            "errorMessage": "Please select a valid relationship."
+          }
+        }
+      ]
+    },
+    "5": {
+      "status": "Temporary Address",
+      "displayRemarks": "Please provide temporary address details",
+      "displayField": [
+        {
+          "key": "country",
+          "label": "Country",
+          "placeholder": "Enter Country Name",
+          "errorColor": "#ff4d4f",
+          "fieldType": "text",
+          "validation": {
+            "required": "N",
+            "errorMessage": "Must Enter county name"
+          }
+        },
+        {
+          "key": "province",
+          "label": "Province",
+          "placeholder": "Select Province",
+          "fieldType": "dropdown",
+          "dropdownOptions": [
+            { "label": "Province one", "value": "1" },
+            { "label": "Province two", "value": "2" },
+            { "label": "Bagmati", "value": "3" },
+            { "label": "Others", "value": "4" }
+          ],
+          "validation": {
+            "required": "N",
+            "errorMessage": "Please select a valid relationship."
+          }
+        }
+      ]
+    },
+    "6": {
+      "status": "Temporary Address",
+      "displayRemarks": "Please provide temporary address details",
+      "displayField": [
+        {
+          "key": "country",
+          "label": "Country",
+          "placeholder": "Enter Country Name",
+          "errorColor": "#ff4d4f",
+          "fieldType": "text",
+          "validation": {
+            "required": "N",
+            "errorMessage": "Must Enter county name"
+          }
+        },
+        {
+          "key": "province",
+          "label": "Province",
+          "placeholder": "Select Province",
+          "fieldType": "dropdown",
+          "dropdownOptions": [
+            { "label": "Province one", "value": "1" },
+            { "label": "Province two", "value": "2" },
+            { "label": "Bagmati", "value": "3" },
+            { "label": "Others", "value": "4" }
+          ],
+          "validation": {
+            "required": "N",
+            "errorMessage": "Please select a valid relationship."
+          }
+        }
+      ]
+    },
+    "7": {
+      "status": "Temporary Address",
+      "displayRemarks": "Please provide temporary address details",
+      "displayField": [
+        {
+          "key": "country",
+          "label": "Country",
+          "placeholder": "Enter Country Name",
+          "errorColor": "#ff4d4f",
+          "fieldType": "text",
+          "validation": {
+            "required": "N",
+            "errorMessage": "Must Enter county name"
+          }
+        },
+        {
+          "key": "province",
+          "label": "Province",
+          "placeholder": "Select Province",
+          "fieldType": "dropdown",
+          "dropdownOptions": [
+            { "label": "Province one", "value": "1" },
+            { "label": "Province two", "value": "2" },
+            { "label": "Bagmati", "value": "3" },
+            { "label": "Others", "value": "4" }
+          ],
+          "validation": {
+            "required": "N",
+            "errorMessage": "Please select a valid relationship."
+          }
+        }
+      ]
+    },
+    "8": {
+      "status": "Temporary Address",
+      "displayRemarks": "Please provide temporary address details",
+      "displayField": [
+        {
+          "key": "country",
+          "label": "Country",
+          "placeholder": "Enter Country Name",
+          "errorColor": "#ff4d4f",
+          "fieldType": "text",
+          "validation": {
+            "required": "N",
+            "errorMessage": "Must Enter county name"
+          }
+        },
+        {
+          "key": "province",
+          "label": "Province",
+          "placeholder": "Select Province",
+          "fieldType": "dropdown",
+          "dropdownOptions": [
+            { "label": "Province one", "value": "1" },
+            { "label": "Province two", "value": "2" },
+            { "label": "Bagmati", "value": "3" },
+            { "label": "Others", "value": "4" }
+          ],
+          "validation": {
+            "required": "N",
+            "errorMessage": "Please select a valid relationship."
+          }
+        }
+      ]
+    },
+    "9": {
+      "status": "Temporary Address",
+      "displayRemarks": "Please provide temporary address details",
+      "displayField": [
+        {
+          "key": "country",
+          "label": "Country",
+          "placeholder": "Enter Country Name",
+          "errorColor": "#ff4d4f",
+          "fieldType": "text",
+          "validation": {
+            "required": "N",
+            "errorMessage": "Must Enter county name"
+          }
+        },
+        {
+          "key": "province",
+          "label": "Province",
+          "placeholder": "Select Province",
+          "fieldType": "dropdown",
+          "dropdownOptions": [
+            { "label": "Province one", "value": "1" },
+            { "label": "Province two", "value": "2" },
+            { "label": "Bagmati", "value": "3" },
+            { "label": "Others", "value": "4" }
+          ],
+          "validation": {
+            "required": "N",
+            "errorMessage": "Please select a valid relationship."
+          }
+        }
+      ]
+    },
+    "10": {
+      "status": "Temporary Address",
+      "displayRemarks": "Please provide temporary address details",
       "displayField": [
         {
           "key": "country",

@@ -9,6 +9,7 @@ export const FieldTypes = {
   FILE: "file",
   CUSTOMPASS: "custompass",
   MULTISELECT: "multiSelect",
+  PREVIEW: "preview"
 } as const;
 
 type FieldTypes = keyof typeof FieldTypes;

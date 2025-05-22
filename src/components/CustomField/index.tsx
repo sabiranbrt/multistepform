@@ -9,6 +9,7 @@ import Upload from "../../assets/icons/upload.svg";
 import { FieldTypes, type ValidationProps } from "../../types";
 import { ValidationRules } from "../../utils/ValidationRegister";
 import Label from "../label";
+import Eye from "../../assets/icons/eye-svgrepo-com.svg";
 
 interface Options {
   label: string;
@@ -41,6 +42,7 @@ interface IProps {
   inputHeight?: string;
   inputWidth?: string;
   placeHolderStyle?: string;
+  imageLink: string;
   disabled?: boolean;
   onChange?: (text: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeArea?: (text: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -67,6 +69,7 @@ const CustomField = ({
   readOnly,
   CrossIcon,
   FileIcon,
+  imageLink,
   label,
   focusErrorBorderColor = "#f94d44",
   validation,
@@ -117,7 +120,8 @@ const CustomField = ({
   const showFloatingLabel =
     fieldType !== FieldTypes.RADIOBUTTON &&
     fieldType !== FieldTypes.CHECKBOX &&
-    fieldType !== FieldTypes.FILE;
+    fieldType !== FieldTypes.FILE &&
+    fieldType !== FieldTypes.PREVIEW;
 
   const inputType =
     type === "password" ? (tooglePassword ? "password" : "text") : type;
@@ -191,10 +195,13 @@ const CustomField = ({
           return (
             <div className=" text-start" {...field}>
               <div className={clsx("relative")}>
-                {showFloatingLabel && (isFocused || field.value) && (
+                {showFloatingLabel && (
                   <label
                     htmlFor={label}
-                    className={clsx("absolute -top-2.5 left-2 z-10")}
+                    className={clsx(
+                      "-top-2.5 left-2 z-10",
+                      isFocused || field.value ? "absolute" : ""
+                    )}
                   >
                     <Label
                       label={label}
@@ -204,7 +211,8 @@ const CustomField = ({
                 )}
                 {fieldType === FieldTypes?.CHECKBOX ||
                 fieldType === FieldTypes?.RADIOBUTTON ||
-                fieldType === FieldTypes?.FILE ? (
+                fieldType === FieldTypes?.FILE ||
+                fieldType === FieldTypes?.PREVIEW ? (
                   <div className={clsx(" !mb-3")}>
                     <Label
                       label={label ?? ""}
@@ -471,20 +479,20 @@ const CustomField = ({
                       />
                     </div>
                     {selectFile && (
-                      <div className=" flex flex-row items-center gap-2">
-                        <div className="flex flex-row items-center gap-2 !mt-2">
+                      <div className=" flex flex-row items-center gap-2 !mt-2">
+                        <div className="flex flex-row items-center gap-2">
                           <img
                             src={FileIcon ? FileIcon : File}
-                            width={30}
-                            height={30}
+                            width={20}
+                            height={20}
                           />
                           <p className=" text-[12px]">{selectFile}</p>
                         </div>
                         <div onClick={handleRemoveFile}>
                           <img
                             src={CrossIcon ? CrossIcon : Cross}
-                            width={30}
-                            height={30}
+                            width={20}
+                            height={20}
                           />
                         </div>
                       </div>
@@ -570,13 +578,25 @@ const CustomField = ({
                       },
                     })}
                     isMulti
-                    onChange={(value) => {
-                      field.onChange(value);
+                    onChange={(selected) => {
+                      field.onChange(selected.map((opt) => opt.value));
                     }}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                     options={options}
                   />
+                ) : fieldType === FieldTypes?.PREVIEW ? (
+                  <div
+                    className=" inline-block"
+                    onClick={() =>
+                      window.open(`https://${imageLink}`, "_blank")
+                    }
+                  >
+                    <div className=" bg-[#5081B9] !p-2 flex flex-row items-center gap-1 rounded-md ">
+                      <p className=" text-white">Preview</p>
+                      <img src={Eye} className="h-4 w-4" />
+                    </div>
+                  </div>
                 ) : null}
               </div>
               {errors[names] && (
