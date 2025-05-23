@@ -1,29 +1,27 @@
 import clsx from "clsx";
 import { TiTick } from "react-icons/ti";
-import data from "../../utils/structure.json";
 
 interface IProp {
   currentIndex: number;
+  formList: any;
 }
 
-const MultiFormHeader = ({ currentIndex }: IProp) => {
-  const json = data;
-
-  const displatDatalength = Object.keys(json?.dataFields);
+const MultiFormHeader = ({ currentIndex, formList }: IProp) => {
+  const displatDatalength = Object.keys(formList?.dataFields);
 
   return (
     <div className=" my-12">
       <div
         className={clsx(
           "flex items-end w-full !py-10",
-          json?.layout === "horizontallayout"
+          formList?.layout === "horizontallayout"
             ? " items-center gap-5 md:gap-4 sm:gap-2 justify-center"
             : "gap-20 flex-col"
         )}
       >
-        {Object.keys(json.dataFields).map((key, index) => {
-          const stepKey = key as keyof typeof json.dataFields;
-          const currentStep = json.dataFields[stepKey];
+        {Object.keys(formList?.dataFields).map((key, index) => {
+          const stepKey = key as keyof typeof formList.dataFields;
+          const currentStep = formList.dataFields[stepKey];
 
           if (!Array.isArray(currentStep)) {
             const activeIndex = index === currentIndex;
@@ -31,14 +29,16 @@ const MultiFormHeader = ({ currentIndex }: IProp) => {
 
             return (
               <div
-                key={stepKey}
+                key={key}
                 className={clsx(
                   "inline-flex gap-5 items-center",
-                  json?.layout === "horizontallayout" ? "flex-row-reverse" : ""
+                  formList?.layout === "horizontallayout"
+                    ? "flex-row-reverse"
+                    : ""
                 )}
               >
                 {index < displatDatalength.length - 1 &&
-                  json?.layout === "horizontallayout" && (
+                  formList?.layout === "horizontallayout" && (
                     <div
                       className={clsx(
                         "h-[0.5px] w-20 2xl:w-20 xl:w-20 mx-2 md:w-10 sm:w-5",
@@ -46,7 +46,6 @@ const MultiFormHeader = ({ currentIndex }: IProp) => {
                       )}
                     />
                   )}
-
                 <p
                   className={clsx(
                     "font-semibold 2xl:text-[18px] xl:text-[18px] md:text-[14px] sm:text-[12px] whitespace-nowrap",
@@ -80,7 +79,6 @@ const MultiFormHeader = ({ currentIndex }: IProp) => {
               </div>
             );
           }
-
           return null;
         })}
       </div>
