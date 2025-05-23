@@ -1,88 +1,62 @@
 import Axios, { AxiosError, type AxiosRequestConfig, type AxiosResponse } from "axios";
 import {
     encryptBody,
+    encryptKey,
     generateAESKey,
     generateIV
 } from "../utils/encrypt";
 
-export class ApiError extends AxiosError {
-    errorMessage: string | null
-    error: string | null
-    override response: AxiosResponse | undefined
-    constructor({ message, code, config, request, response }: AxiosError<any>) {
-        super(message, code, config, request, response)
-        this.response = response
-        this.status = response?.status
-        this.message = message
-        this.errorMessage = response ? this.getErrorMessage(response) : message
-        this.error = response?.data?.error
-    }
-
-    getErrorMessage = (response: any) => {
-        const errorData = response?.data
-        if (Array.isArray(errorData?.message) && errorData?.message?.[0]) {
-            return errorData?.message[0]
-        }
-        return errorData?.message
-    }
-}
-
 const headers = {} as any
+
+export const generateRandom13DigitNumber = () => {
+    return Math.floor(Math.random() * 9000000000000) + 1000000000000;
+};
+
+const url = import.meta.env.VITE_API_BASE_URL
+
 // Configure base URL
 const axios = Axios.create({
-    baseURL: "https://mocki.io/v1/",
-    headers: { ...headers, "Content-Type": "application/json" }
+    baseURL: url,
+    headers: {
+        ...headers,
+        "Content-Type": "application/json",
+    }
 })
-
-// Add response interceptor for handling errors globally
-// axios.interceptors.request.use(
-//     async (config: any) => {
-//         // if (loginStatus?.access_token) {
-//         //     console.log("----ACCESS TOKEN----")
-//         //     return {
-//         //         ...config,
-//         //         headers: {
-//         //             ...config.headers,
-//         //             Authorization: `Bearer ${loginStatus?.access_token}`,
-//         //         },
-//         //     }
-//         // }
-//         console.log("----NO ACCESS TOKEN----", config)
-//         return config
-//     },
-//     function (error) {
-//         return Promise.reject(error)
-//     },
-// )
 
 axios.interceptors.request.use(
     async (config: any) => {
-        const requestInfo = {
-            ip: "ip_ac297be30055",
-            reqLat: "reqLat_931bba4b57b4",
-            reqLong: "reqLong_f7bd676464be",
-            commDeviceId: "commDeviceId_31944fcdc619",
-            requestSource: "requestSource_21cb37a23bd1"
-        };
+        if (config.headers.includeUrn) {
+            const urn = generateRandom13DigitNumber().toString();
+            config.headers.urn = urn;
+        }
+        delete config.headers.includeUrn;
+
         if ((config.method === "post") && config.data) {
             try {
-                const originalPayload = config.data;
+                const requestInfo = {
+                    ip: "ip_ac297be30055",
+                    reqLat: "reqLat_931bba4b57b4",
+                    reqLong: "reqLong_f7bd676464be",
+                    commDeviceId: "commDeviceId_31944fcdc619",
+                    requestSource: "requestSource_21cb37a23bd1"
+                };
+                const originalPayload = { requestInfo, ...config.data };
                 const aesKey = generateAESKey();
                 const iv = generateIV(aesKey);
-
-                const encryptedBody = encryptBody(JSON.stringify(originalPayload), aesKey, iv);
-                const encryptedRequestInfo = encryptBody(JSON.stringify(requestInfo), aesKey, iv);
-
-                config.data = { encryptedBody, encryptedRequestInfo };
-
+                const reqBody = {
+                    encryptedKey: encryptKey(aesKey, import.meta.env.VITE_RSA_PUBLIC_KEY),
+                    encryptedBody: encryptBody(
+                        JSON.stringify(originalPayload),
+                        aesKey,
+                        iv
+                    ),
+                };
+                config.data = reqBody;
             } catch (error) {
                 console.error("Error encrypting request data:", error);
                 return Promise.reject(error);
             }
         }
-        config.headers = {
-            ...config.headers,
-        };
         return config;
     },
     error => Promise.reject(error)
@@ -91,36 +65,72 @@ axios.interceptors.request.use(
 /**
  * Generic request function
  */
-// Response Interceptor
 
-// axios.interceptors.response.use(
-//     (response) => response,
-//     (error) => {
-//         const { logout } = useLoginStore.getState()
-//         if (error?.response?.status === 401 && error?.response?.data?.message?.toLowerCase() === "token expired") {
-//             console.log("CAME HERE")
-//             Toast.show({
-//                 type: ALERT_TYPE.INFO,
-//                 title: "Login Expired",
-//                 textBody: "Please login again",
-//             })
-//             logout()
-//         }
-//         return Promise.reject(error)
-//     }
-// )
+interface ApiResponseWrapper<T> {
+    apiResponseCode: string;
+    apiResponseMessage: string;
+    apiResponseTime: string;
+    apiResponseFrom: string;
+    apiResponseData: {
+        responseCode: string;
+        responseMessage: string;
+        data: T;
+    };
+}
 
 export const request = async <T>(request: AxiosRequestConfig): Promise<T> => {
     try {
-        const res: AxiosResponse<T> = await axios.request<T>(request)
+        const res: AxiosResponse<ApiResponseWrapper<T>> = await axios.request(request);
 
-        // if ((res.data as any)?.type === "error") {
-        //   throw new Error((res.data as any)?.message || "An error occurred")
-        // }
-        return res.data // TypeScript will infer this as T
+        const { apiResponseCode, apiResponseMessage, apiResponseData } = res.data;
+
+        if (apiResponseCode !== "200") {
+            throw new ApiError({
+                message: apiResponseMessage || "API Error",
+                code: apiResponseCode,
+                config: request,
+                request: res.request,
+                response: res
+            });
+        }
+
+        if (apiResponseData?.responseCode !== "200") {
+            throw new ApiError({
+                message: apiResponseData.responseMessage || "Application Error",
+                code: apiResponseData.responseCode,
+                config: request,
+                request: res.request,
+                response: res
+            });
+        }
+
+        return apiResponseData.data;
+
     } catch (err) {
-        throw new ApiError(err as AxiosError)
+        throw new ApiError(err as AxiosError);
     }
+};
+
+export class ApiError extends AxiosError {
+    errorMessage: string | null;
+    error: string | null;
+    override response: AxiosResponse | undefined;
+
+    constructor(err: AxiosError | { message: string; code?: string; config?: any; request?: any; response?: AxiosResponse }) {
+        super(err.message, err.code, err.config, err.request, err.response);
+        this.response = err.response;
+        this.status = err.response?.status;
+        this.message = err.message;
+        this.errorMessage = this.getErrorMessage(err.response);
+        this.error = err.response?.data?.error ?? null;
+    }
+
+    getErrorMessage = (response: any): string => {
+        if (!response || !response.data) return "Unknown error";
+        const topLevelMsg = response.data.apiResponseMessage;
+        const nestedMsg = response.data.apiResponseData?.responseMessage;
+        const fallbackMsg = response.data.message;
+        return topLevelMsg || nestedMsg || fallbackMsg || "Unknown error";
+    };
 }
 
-// API Service Methods

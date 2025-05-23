@@ -1,26 +1,38 @@
 import clsx from "clsx";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import ArrowLeft from "./assets/icons/arrowLeft.svg";
 import ArrowRight from "./assets/icons/arrowRight.svg";
 import { default as CustomField } from "./components/CustomField";
 import MultiFormHeader from "./components/multiFormHeader";
 import Spinner from "./components/spinner";
-import { useFormsave } from "./hooks";
+import { useFormList, useSaveForm } from "./hooks";
+import { updateLoading } from "./redux/slices/appSlice";
+import type { FormValues } from "./types";
 
 const StepForm = () => {
   const [index, setIndex] = useState(0);
+  const dispatch = useDispatch();
+  const { data: formList, isLoading } = useFormList();
 
-  const { data: formList, isLoading } = useFormsave();
+  const { mutateAsync } = useSaveForm();
 
-  const methods = useForm<any>({
+  const methods = useForm<FormValues>({
     mode: "onChange",
   });
 
-  const { handleSubmit, trigger } = methods;
+  const { handleSubmit, trigger, reset } = methods;
 
-  const onSubmit = () => {
-    console.log("form");
+  const onSubmit = async (formValues: FormValues) => {
+    dispatch(updateLoading({ isLoading: true }));
+    try {
+      const response = await mutateAsync({ ...formValues });
+      reset();
+      console.log("response", response);
+    } catch (err) {
+      console.log("error", err);
+    }
   };
 
   const render = () => {

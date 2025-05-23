@@ -7,9 +7,7 @@ interface IProp {
 }
 
 const MultiFormHeader = ({ currentIndex, formList }: IProp) => {
-  // const formList = data;
-
-  const displatDatalength = Object.keys(formList);
+  const displatDatalength = Object.keys(formList?.dataFields);
 
   return (
     <div className=" my-12">
@@ -31,7 +29,7 @@ const MultiFormHeader = ({ currentIndex, formList }: IProp) => {
 
             return (
               <div
-                key={currentStep}
+                key={key}
                 className={clsx(
                   "inline-flex gap-5 items-center",
                   formList?.layout === "horizontallayout"
@@ -48,7 +46,6 @@ const MultiFormHeader = ({ currentIndex, formList }: IProp) => {
                       )}
                     />
                   )}
-
                 <p
                   className={clsx(
                     "font-semibold 2xl:text-[18px] xl:text-[18px] md:text-[14px] sm:text-[12px] whitespace-nowrap",
@@ -82,7 +79,6 @@ const MultiFormHeader = ({ currentIndex, formList }: IProp) => {
               </div>
             );
           }
-
           return null;
         })}
       </div>

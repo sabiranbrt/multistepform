@@ -279,7 +279,7 @@ const CustomField = ({
                       },
                     })}
                     onChange={(value) => {
-                      field.onChange(value);
+                      field.onChange(value?.value);
                     }}
                     onFocus={handleFocus}
                     onBlur={handleBlur}

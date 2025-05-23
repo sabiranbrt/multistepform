@@ -1,15 +1,21 @@
+import type { FormValues } from "../types"
 import { request } from "./axios"
 
 export const getFormList = () => {
     return request<any>({
-        url: "1cde48fc-3284-4a54-9979-4c892fad933b",
+        url: "data",
         method: "GET",
+        headers: {
+            includeUrn: true,
+        }
     })
 }
 
-export const getFormSave = () => {
+export const getFormSave = (body: FormValues) => {
     return request<any>({
-        url: "1cde48fc-3284-4a54-9979-4c892fad933b",
+        url: "data",
         method: "POST",
+        headers: { includeUrn: true },
+        data: body
     })
 }
