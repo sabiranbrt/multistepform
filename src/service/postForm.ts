@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { FormValues } from "../types"
 import { request } from "./axios"
 
