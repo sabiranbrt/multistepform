@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import JSEncrypt from 'jsencrypt';
+import CryptoJS from 'crypto-js';
 
 export const encryptKey = (data: any, publicKeyPEM: any) => {
   const encrypt = new JSEncrypt();

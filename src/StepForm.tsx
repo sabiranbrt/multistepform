@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import clsx from "clsx";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -22,13 +23,13 @@ const StepForm = () => {
     mode: "onChange",
   });
 
-  const { handleSubmit, trigger, reset } = methods;
+  const { handleSubmit, trigger } = methods;
 
   const onSubmit = async (formValues: FormValues) => {
     dispatch(updateLoading({ isLoading: true }));
     try {
       const response = await mutateAsync({ ...formValues });
-      reset();
+
       console.log("response", response);
     } catch (err) {
       console.log("error", err);
@@ -64,8 +65,12 @@ const StepForm = () => {
           options={displaylist?.dropdownOptions}
           validation={{
             required: displaylist?.validation.required,
-            pattern: displaylist?.validation.pattern,
-            errorMessage: displaylist?.validation.errorMessage,
+            validations: [
+              {
+                regex: displaylist?.validation.pattern,
+                errorMessage: displaylist?.validation.errorMessage,
+              },
+            ],
           }}
         />
       ));

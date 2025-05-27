@@ -23,13 +23,14 @@ export enum FieldTypes {
   PREVIEW = "preview"
 };
 
-
 export interface ValidationProps {
   required?: string;
-  pattern?: string;
+  validations: Validations[]
+}
+export interface Validations{
+  regex: string
   errorMessage?: string;
 }
-
 
 export interface FormValues {
   firstName: string
@@ -50,3 +51,4 @@ export interface FormValues {
   postalCode: string
   city: string
 }
+

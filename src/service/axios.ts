@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Axios, { AxiosError, type AxiosRequestConfig, type AxiosResponse } from "axios";
 import {
     encryptBody,
@@ -12,11 +13,11 @@ export const generateRandom13DigitNumber = () => {
     return Math.floor(Math.random() * 9000000000000) + 1000000000000;
 };
 
-const url = import.meta.env.VITE_API_BASE_URL
+// const url = import.meta.env.VITE_API_BASE_URL
 
 // Configure base URL
 const axios = Axios.create({
-    baseURL: url,
+    baseURL: "http://192.168.1.66:8080/",
     headers: {
         ...headers,
         "Content-Type": "application/json",

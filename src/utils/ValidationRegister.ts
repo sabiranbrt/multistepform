@@ -7,20 +7,24 @@ export const ValidationRules = (validation?: ValidationProps): RegisterOptions =
   if (!validation) return rules;
 
   if (validation.required === "Y") {
-    rules.required = validation.errorMessage || "This field is required";
+    rules.required = "This field is required";
   }
 
-  if (validation.pattern) {
-    try {
-      const regex = new RegExp(validation.pattern);
-      rules.pattern = {
-        value: regex,
-        message: validation.errorMessage || "Invalid format",
-      };
-    } catch (error) {
-      console.warn("Invalid regex pattern:", validation.pattern);
-    }
-  }
+  if (validation.validations) {
+    validation.validations.forEach((val) => {
+      if (val.regex) {
+        try {
+          const regex = new RegExp(val.regex);
+          rules.pattern = {
+            value: regex,
+            message: val.errorMessage || "Invalid format",
+          };
+        } catch (err) {
+          console.warn("Invalid regex pattern:", err);
+        }
+      }
+    });
+  } 
 
   return rules;
 };

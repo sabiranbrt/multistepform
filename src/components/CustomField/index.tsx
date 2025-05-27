@@ -1,19 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import clsx from "clsx";
-import { useRef, useState } from "react";
+import { useState } from "react";
+import Dropzone from "react-dropzone";
 import { Controller, useFormContext } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Select from "react-select";
 import Cross from "../../assets/icons/cross.svg";
+import Eye from "../../assets/icons/eye-svgrepo-com.svg";
 import File from "../../assets/icons/file.svg";
 import Upload from "../../assets/icons/upload.svg";
 import { FieldTypes, type ValidationProps } from "../../types";
 import { ValidationRules } from "../../utils/ValidationRegister";
 import Label from "../label";
-import Eye from "../../assets/icons/eye-svgrepo-com.svg";
 
 interface Options {
   label: string;
   value: string;
+  default: boolean;
 }
 
 interface IProps {
@@ -23,6 +26,7 @@ interface IProps {
   isSearchable?: boolean;
   readOnly?: boolean;
   type?: string;
+  maxFile?: number;
   OptionSelectColor?: string;
   OptionFocusColor?: string;
   OptionTextColor?: string;
@@ -67,6 +71,7 @@ const CustomField = ({
   UploadIcon,
   OptionFocusColor = "#fff",
   readOnly,
+  maxFile = 1,
   CrossIcon,
   FileIcon,
   imageLink,
@@ -100,13 +105,9 @@ const CustomField = ({
   const [tooglePassword, setTogglePassword] = useState(false);
   const [realValue, setRealValue] = useState("");
   const [selectFile, setSelectedFile] = useState("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleRemoveFile = () => {
     setSelectedFile("");
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
   };
 
   const handleFocus = () => {
@@ -154,6 +155,7 @@ const CustomField = ({
         margin: "0 !important",
       };
     },
+
     placeholder: (provided: any, state: any) => {
       const hasError = errors && errors[names];
       const isFocused = state.isFocused;
@@ -168,6 +170,7 @@ const CustomField = ({
         fontSize: `${placeHolderSize}px`,
       };
     },
+
     option: (provided: any, state: any) => {
       return {
         ...provided,
@@ -179,7 +182,8 @@ const CustomField = ({
           : state.isFocused
           ? OptionFocusColor
           : "#000",
-        // fontSize: `${optionFontSize ?? 14}px`,
+        // fontSize: `${optionFontSize ?? 14}px,
+        zIndex: 99,
         cursor: "pointer",
       };
     },
@@ -199,7 +203,7 @@ const CustomField = ({
                   <label
                     htmlFor={label}
                     className={clsx(
-                      "-top-2.5 left-2 z-10",
+                      "-top-2.5 left-2 z-[9] ",
                       isFocused || field.value ? "absolute" : ""
                     )}
                   >
@@ -209,6 +213,7 @@ const CustomField = ({
                     />
                   </label>
                 )}
+
                 {fieldType === FieldTypes?.CHECKBOX ||
                 fieldType === FieldTypes?.RADIOBUTTON ||
                 fieldType === FieldTypes?.FILE ||
@@ -222,6 +227,7 @@ const CustomField = ({
                     />
                   </div>
                 ) : null}
+
                 {fieldType === FieldTypes?.TEXTFIELD ? (
                   <input
                     className={clsx(
@@ -253,6 +259,7 @@ const CustomField = ({
                     placeholder={!isFocused ? placeHolder : ""}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
+                    defaultValue={field.value}
                     disabled={field.value ? readOnly : false}
                     type={type}
                     onChange={(e) => {
@@ -267,6 +274,9 @@ const CustomField = ({
                     isSearchable={false}
                     placeholder={!isFocused ? placeHolder : ""}
                     styles={customStyles}
+                    defaultValue={options.find(
+                      (option) => option.value === field.value
+                    )}
                     theme={(theme) => ({
                       ...theme,
                       borderRadius: 0,
@@ -278,8 +288,8 @@ const CustomField = ({
                         primary: "#F2F2F2",
                       },
                     })}
-                    onChange={(value) => {
-                      field.onChange(value?.value);
+                    onChange={(selected) => {
+                      field.onChange(selected?.value);
                     }}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
@@ -288,6 +298,7 @@ const CustomField = ({
                 ) : fieldType === FieldTypes?.TEXTAREA ? (
                   <textarea
                     disabled={field.value ? readOnly : false}
+                    defaultValue={field.value}
                     className={clsx(
                       `outline-0 !py-${inputHeight} !px-${inputWidth} md:!p-2 sm:!p-2`,
                       textClassName
@@ -386,6 +397,7 @@ const CustomField = ({
                           : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]",
                         `placeholder:text-[${placeHoldercolor}] placeholder:text-[${placeHolderSize}]`
                       )}
+                      defaultValue={field.value}
                       style={{
                         borderColor: errors[names]
                           ? focusErrorBorderColor
@@ -424,77 +436,90 @@ const CustomField = ({
                     )}
                   </div>
                 ) : fieldType === FieldTypes?.FILE ? (
-                  <div className=" flex flex-col items-center">
+                  <div className="flex flex-col items-center">
                     <div
                       className={clsx(
                         `outline-0 !py-${inputHeight} !px-${inputWidth} md:!p-2 sm:!p-2 w-full`,
                         textClassName
                           ? textClassName
-                          : " !px-2 !py-3 rounded-sm border-dotted border-2 border-[#F2F2F2]",
+                          : "!px-2 !py-3 rounded-sm border-dotted border-2 border-[#F2F2F2]",
                         `placeholder:text-[${placeHoldercolor}] placeholder:text-[${placeHolderSize}]`
                       )}
                     >
-                      <label
-                        htmlFor="file-upload"
-                        className=" flex flex-col items-center gap-1.5"
-                      >
-                        <img
-                          src={UploadIcon ? UploadIcon : Upload}
-                          width={50}
-                          height={50}
-                        />
-                        <p className=" !p-2 bg-[#5081B9] text-white rounded-md">
-                          Upload File
-                        </p>
-                      </label>
-                      <input
-                        ref={fileInputRef}
-                        id="file-upload"
-                        style={{ display: "none" }}
-                        className={clsx(
-                          "outline-0",
-                          textClassName
-                            ? textClassName
-                            : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]",
-                          isFocused
-                            ? "border !border-[#5081B9] shadow-sm shadow-[#F2F2F2]"
-                            : focusBorderColor,
-                          !focusErrorBorderColor
-                            ? errors[names]
-                              ? "border !border-[#f94d44] shadow-sm shadow-[#F2F2F2] bg-[#FFF2F2]"
-                              : focusErrorBorderColor
-                            : ""
-                        )}
-                        placeholder={!isFocused ? placeHolder : ""}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                        disabled={field.value ? readOnly : false}
-                        type={type ? type : "file"}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          field.onChange(value);
-                          setSelectedFile(value);
-                          if (onChange) onChange(e);
+                      <Dropzone
+                        onDrop={(acceptedFiles) => {
+                          if (acceptedFiles.length > 0) {
+                            setSelectedFile(acceptedFiles[0].name);
+                          }
                         }}
-                      />
+                        maxFiles={maxFile ? maxFile : 1}
+                        accept={{
+                          "image/*": [".png", ".jpg", ".jpeg", ".gif"],
+                          "application/pdf": [".pdf"],
+                          "text/plain": [".txt"],
+                        }}
+                      >
+                        {({ getRootProps, getInputProps }) => (
+                          <section>
+                            <div
+                              {...getRootProps()}
+                              className="cursor-pointer hover:opacity-80 transition-opacity"
+                            >
+                              <input {...getInputProps()} />
+                              <label
+                                htmlFor="file-upload"
+                                className="flex flex-col items-center gap-1.5"
+                              >
+                                <img
+                                  src={UploadIcon || Upload}
+                                  width={50}
+                                  height={50}
+                                  alt="Upload icon"
+                                />
+                                <p className="!p-2 bg-[#5081B9] text-white rounded-md hover:bg-[#3a6ea5] transition-colors">
+                                  {selectFile ? "Replace File" : "Upload File"}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {selectFile
+                                    ? selectFile
+                                    : "Drag & drop or click to browse"}
+                                </p>
+                                 <p className="text-xs text-gray-500">{`${maxFile}`} files are the maximum number of files you can drop here</p>
+                              </label>
+                            </div>
+                          </section>
+                        )}
+                      </Dropzone>
                     </div>
+
                     {selectFile && (
-                      <div className=" flex flex-row items-center gap-2 !mt-2">
-                        <div className="flex flex-row items-center gap-2">
+                      <div className="flex flex-row items-center justify-between bg-gray-100 p-2 rounded-md !mt-2 w-full max-w-xs">
+                        <div className="flex flex-row items-center gap-2 overflow-hidden">
                           <img
-                            src={FileIcon ? FileIcon : File}
+                            src={FileIcon || File}
                             width={20}
                             height={20}
+                            alt="File icon"
                           />
-                          <p className=" text-[12px]">{selectFile}</p>
+                          <p className="text-[12px] truncate flex-1">
+                            {selectFile}
+                          </p>
                         </div>
-                        <div onClick={handleRemoveFile}>
+                        <button
+                          onClick={() => {
+                            field.onChange(null);
+                            handleRemoveFile();
+                          }}
+                          className="p-1 hover:bg-gray-200 rounded-full transition-colors"
+                          aria-label="Remove file"
+                        >
                           <img
-                            src={CrossIcon ? CrossIcon : Cross}
-                            width={20}
-                            height={20}
+                            src={CrossIcon || Cross}
+                            width={16}
+                            height={16}
+                            alt="Remove icon"
                           />
-                        </div>
+                        </button>
                       </div>
                     )}
                   </div>
@@ -568,18 +593,54 @@ const CustomField = ({
                     isSearchable={isSearchable}
                     placeholder={!isFocused ? placeHolder : ""}
                     styles={customStyles}
+                    value={[
+                      ...options.filter((option) => option.default),
+                      ...options.filter(
+                        (option) =>
+                          field.value?.includes(option.value) && !option.default
+                      ),
+                    ]}
                     theme={(theme) => ({
                       ...theme,
                       borderRadius: 0,
                       colors: {
                         ...theme.colors,
-                        primary25: "hotpink",
-                        primary: "black",
+                        // primary25: `${
+                        //   OptionSelectColor ? OptionSelectColor : "#5081B9"
+                        // }`,
+                        primary: "#F2F2F2",
                       },
                     })}
                     isMulti
-                    onChange={(selected) => {
-                      field.onChange(selected.map((opt) => opt.value));
+                    isClearable={options?.some((val) => !val.default === true)}
+                    onChange={(selectedOptions, actionMeta) => {
+                      switch (actionMeta.action) {
+                        case "remove-value":
+                        case "pop-value":
+                          if (actionMeta.removedValue.default) {
+                            return;
+                          }
+                          break;
+                        case "clear":
+                          selectedOptions = options.filter(
+                            (option) => option.default
+                          );
+                          break;
+                      }
+
+                      const selectedNonFixedValues =
+                        selectedOptions
+                          ?.filter((option) => !option.default)
+                          .map((option) => option.value) || [];
+
+                      const fixedValues = options
+                        .filter((option) => option.default)
+                        .map((option) => option.value);
+
+                      field.onChange([
+                        ...fixedValues,
+                        ...selectedNonFixedValues,
+                      ]);
                     }}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
