@@ -63,15 +63,7 @@ const StepForm = () => {
           placeHolder={displaylist?.placeholder}
           fieldType={displaylist?.fieldType}
           options={displaylist?.dropdownOptions}
-          validation={{
-            required: displaylist?.validation.required,
-            validations: [
-              {
-                regex: displaylist?.validation.pattern,
-                errorMessage: displaylist?.validation.errorMessage,
-              },
-            ],
-          }}
+          validation={displaylist?.validation}
         />
       ));
     }
@@ -102,6 +94,20 @@ const StepForm = () => {
     }
 
     return null;
+  };
+
+  const getCurrentStepFieldNames = (): any[] => {
+    const stepKeys = Object.keys(formList?.dataFields ?? {}) as Array<
+      keyof typeof formList.dataFields
+    >;
+    const currentKey = stepKeys[index];
+    const currentStep = formList?.dataFields?.[currentKey];
+
+    if (!Array.isArray(currentStep)) {
+      return currentStep?.displayField?.map((item: any) => item.key) ?? [];
+    }
+
+    return [];
   };
 
   if (isLoading) return <Spinner />;
@@ -175,7 +181,8 @@ const StepForm = () => {
                     formList?.formType === "multiple" && (
                       <div
                         onClick={async () => {
-                          const isStepValid = await trigger();
+                          const fieldsToValidate = getCurrentStepFieldNames();
+                          const isStepValid = await trigger(fieldsToValidate);
                           if (isStepValid) {
                             setIndex((prev) => prev + 1);
                           }

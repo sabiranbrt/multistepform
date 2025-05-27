@@ -21,11 +21,7 @@
           "readOnly": true,
           "validation": {
             "required": "Y",
-            "validations": [
-              {
-                "errorMessage": "Full name is required."
-              }
-            ]
+            "errorMessage":"Full name is required."
           }
         },
         {
@@ -36,12 +32,7 @@
           "subType": "date",
           "validation": {
             "required": "Y",
-            "validations": [
-              {
-                "regex": "/^([0][1-9]|[12][0-9]|3[01])\/([0][1-9]|1[0-2])\/([0-9]{4})$/",
-                "errorMessage": "Valid date of birth"
-              }
-            ]
+            "errorMessage": "Valid date of birth"
           }
         },
         {
@@ -52,18 +43,14 @@
           "textSecurity": "$",
           "validation": {
             "required": "Y",
-            "validations": [
-              {
-                "errorMessage": "Citizenship number is required."
-              }
-            ]
+              "errorMessage": "Citizenship number is required."
           }
         },
         {
           "key": "password",
           "label": "Password",
           "placeholder": "Password",
-          "fieldType": "text",
+          "fieldType": "password",
           "validation": {
             "required": "Y",
             "validations": [
@@ -78,7 +65,7 @@
           "key": "customPassword",
           "label": "Custom Password",
           "placeholder": "Custom Password",
-          "fieldType": "text",
+          "fieldType": "custompass",
           "textSecurity": "$",
           "validation": {
             "required": "Y",
@@ -97,7 +84,7 @@
           "fieldType": "text",
           "subType": "number",
           "validation": {
-            "required": "N",
+            "required": "Y",
             "validations": [
               {
                 "regx": "^[6-9]\\d{9}$",
@@ -289,21 +276,21 @@
   }
 }
 
-// {
-//     "fullName": "",
-//   "dob": "",
-//   "citizenshipNumber": "",
-//   "password": "",
-//   "customPassword": "",
-//   "mobileNumber": "",
-//   "imagePreview": "",
-//   "gender": "",
-//   "relations": "",
-//   "multiSelect": "",
-//   "uploadPhoto": "",
-//   "country": "",
-//   "province": "",
-//   "district": "",
-//   "postalCode": "",
-//   "city": ""
-// }
+{
+  "fullName": "",
+  "dob": "",
+  "citizenshipNumber": "",
+  "password": "",
+  "customPassword": "",
+  "mobileNumber": "",
+  "imagePreview": "",
+  "gender": "",
+  "relations": [],
+  "multiSelect": [],
+  "uploadPhoto": "",
+  "country": "",
+  "province": "",
+  "district": "",
+  "postalCode": "",
+  "city": ""
+}

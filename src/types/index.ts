@@ -25,6 +25,7 @@ export enum FieldTypes {
 
 export interface ValidationProps {
   required?: string;
+  errorMessage?: string;
   validations: Validations[]
 }
 export interface Validations{
@@ -32,23 +33,43 @@ export interface Validations{
   errorMessage?: string;
 }
 
+// export interface FormValues {
+//   firstName: string
+//   middleName: string
+//   lastName: string
+//   email: string
+//   dob: string
+//   citizenshipNumber: string
+//   mobileNumber: string
+//   imagePreview: string
+//   Gender: string
+//   designation: string
+//   multiSelect: string
+//   uploadPhoto: string
+//   relations: string
+//   country: string
+//   province: string
+//   district: string
+//   postalCode: string
+//   city: string
+// }
 export interface FormValues {
-  firstName: string
-  middleName: string
-  lastName: string
-  email: string
-  dob: string
-  citizenshipNumber: string
-  mobileNumber: string
-  imagePreview: string
-  Gender: string
-  designation: string
-  multiSelect: string
-  uploadPhoto: string
-  country: string
-  province: string
-  district: string
-  postalCode: string
+  fullName: string,
+  dob: string,
+  citizenshipNumber: string,
+  password: string,
+  customPassword: string,
+  mobileNumber: string,
+  imagePreview: string,
+  gender: string,
+  relations: string[],
+  multiSelect: string[],
+  uploadPhoto: string,
+  country: string,
+  province: string,
+  district: string,
+  postalCode: string,
   city: string
 }
+
 

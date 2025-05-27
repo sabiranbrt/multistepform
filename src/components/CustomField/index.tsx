@@ -5,6 +5,7 @@ import Dropzone from "react-dropzone";
 import { Controller, useFormContext } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Select from "react-select";
+import { Tooltip } from "react-tooltip";
 import Cross from "../../assets/icons/cross.svg";
 import Eye from "../../assets/icons/eye-svgrepo-com.svg";
 import File from "../../assets/icons/file.svg";
@@ -100,7 +101,6 @@ const CustomField = ({
     formState: { errors },
   } = useFormContext();
 
-  const generatedRules = ValidationRules(validation);
   const [isFocused, setIsFocused] = useState(false);
   const [tooglePassword, setTogglePassword] = useState(false);
   const [realValue, setRealValue] = useState("");
@@ -125,7 +125,11 @@ const CustomField = ({
     fieldType !== FieldTypes.PREVIEW;
 
   const inputType =
-    type === "password" ? (tooglePassword ? "password" : "text") : type;
+    fieldType === "password"
+      ? tooglePassword
+        ? "password"
+        : "text"
+      : fieldType;
 
   const customStyles = {
     control: (provided: any, state: any) => {
@@ -194,18 +198,20 @@ const CustomField = ({
       <Controller
         control={control}
         name={names}
-        rules={{ ...generatedRules }}
+        rules={ValidationRules(validation)}
         render={({ field }) => {
           return (
             <div className=" text-start" {...field}>
               <div className={clsx("relative")}>
-                {showFloatingLabel && (
+                {showFloatingLabel && (isFocused || field.value) && (
                   <label
                     htmlFor={label}
                     className={clsx(
-                      "-top-2.5 left-2 z-[9] ",
-                      isFocused || field.value ? "absolute" : ""
+                      "absolute -top-2.5 left-2 z-[9] "
+                      // isFocused || field.value ? "absolute" : ""
                     )}
+                    data-tooltip-id={`tooltip-${label}`}
+                    data-tooltip-content={`${label}`}
                   >
                     <Label
                       label={label}
@@ -213,7 +219,6 @@ const CustomField = ({
                     />
                   </label>
                 )}
-
                 {fieldType === FieldTypes?.CHECKBOX ||
                 fieldType === FieldTypes?.RADIOBUTTON ||
                 fieldType === FieldTypes?.FILE ||
@@ -229,74 +234,88 @@ const CustomField = ({
                 ) : null}
 
                 {fieldType === FieldTypes?.TEXTFIELD ? (
-                  <input
-                    className={clsx(
-                      "outline-0",
-                      textClassName
-                        ? textClassName
-                        : "bg-[#F7F7F7] rounded-sm border border-[#F2F2F2]",
-                      `placeholder:text-[${placeHoldercolor}] placeholder:text-[${placeHolderSize}]`
-                    )}
-                    style={{
-                      borderColor: errors[names]
-                        ? focusErrorBorderColor
-                        : isFocused
-                        ? focusBorderColor ?? "#5081B9"
-                        : "#F2F2F2",
-                      backgroundColor: errors[names]
-                        ? focusErrorBgColor ?? "#FFF2F2"
-                        : !isFocused
-                        ? "#F7F7F7"
-                        : undefined,
-                      boxShadow: errors[names]
-                        ? `0 1px 2px 0 ${focusErrorShadowColor}`
-                        : isFocused
-                        ? `0 1px 2px 0 ${focusShadowColor}`
-                        : undefined,
-                      paddingBlock: `${inputHeight}px`,
-                      paddingInline: `${inputWidth}px`,
-                    }}
-                    placeholder={!isFocused ? placeHolder : ""}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    defaultValue={field.value}
-                    disabled={field.value ? readOnly : false}
-                    type={type}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      field.onChange(value);
-                      if (onChange) onChange(e);
-                    }}
-                  />
+                  <div className="relative">
+                    <input
+                      className={clsx(
+                        "outline-0",
+                        textClassName
+                          ? textClassName
+                          : "bg-[#F7F7F7] rounded-sm border border-[#F2F2F2]",
+                        `placeholder:text-[${placeHoldercolor}] placeholder:text-[${placeHolderSize}]`
+                      )}
+                      data-tooltip-id={`tooltip-${placeHolder}`}
+                      data-tooltip-content={`${placeHolder}`}
+                      style={{
+                        borderColor: errors[names]
+                          ? focusErrorBorderColor
+                          : isFocused
+                          ? focusBorderColor ?? "#5081B9"
+                          : "#F2F2F2",
+                        backgroundColor: errors[names]
+                          ? focusErrorBgColor ?? "#FFF2F2"
+                          : !isFocused
+                          ? "#F7F7F7"
+                          : undefined,
+                        boxShadow: errors[names]
+                          ? `0 1px 2px 0 ${focusErrorShadowColor}`
+                          : isFocused
+                          ? `0 1px 2px 0 ${focusShadowColor}`
+                          : undefined,
+                        paddingBlock: `${inputHeight}px`,
+                        paddingInline: `${inputWidth}px`,
+                      }}
+                      placeholder={!isFocused ? placeHolder : ""}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      defaultValue={field.value}
+                      disabled={field.value ? readOnly : false}
+                      readOnly={readOnly}
+                      type={type}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        field.onChange(value);
+                        if (onChange) onChange(e);
+                      }}
+                    />
+                  </div>
                 ) : fieldType === FieldTypes?.SELECTFIELD ? (
-                  <Select
-                    isDisabled={field.value ? readOnly : false}
-                    isSearchable={false}
-                    placeholder={!isFocused ? placeHolder : ""}
-                    styles={customStyles}
-                    defaultValue={options.find(
-                      (option) => option.value === field.value
-                    )}
-                    theme={(theme) => ({
-                      ...theme,
-                      borderRadius: 0,
-                      colors: {
-                        ...theme.colors,
-                        primary25: `${
-                          OptionSelectColor ? OptionSelectColor : "#5081B9"
-                        }`,
-                        primary: "#F2F2F2",
-                      },
-                    })}
-                    onChange={(selected) => {
-                      field.onChange(selected?.value);
-                    }}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    options={options}
-                  />
+                  <div
+                    data-tooltip-id={`tooltip-${placeHolder}`}
+                    data-tooltip-content={`${placeHolder}`}
+                  >
+                    <Select
+                      data-tooltip-id={`tooltip-${placeHolder}`}
+                      data-tooltip-content={`${placeHolder}`}
+                      isDisabled={field.value ? readOnly : false}
+                      isSearchable={false}
+                      placeholder={!isFocused ? placeHolder : ""}
+                      styles={customStyles}
+                      defaultValue={options.find(
+                        (option) => option.value === field.value
+                      )}
+                      theme={(theme) => ({
+                        ...theme,
+                        borderRadius: 0,
+                        colors: {
+                          ...theme.colors,
+                          primary25: `${
+                            OptionSelectColor ? OptionSelectColor : "#5081B9"
+                          }`,
+                          primary: "#F2F2F2",
+                        },
+                      })}
+                      onChange={(selected) => {
+                        field.onChange(selected?.value);
+                      }}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      options={options}
+                    />
+                  </div>
                 ) : fieldType === FieldTypes?.TEXTAREA ? (
                   <textarea
+                    data-tooltip-id={`tooltip-${placeHolder}`}
+                    data-tooltip-content={`${placeHolder}`}
                     disabled={field.value ? readOnly : false}
                     defaultValue={field.value}
                     className={clsx(
@@ -334,58 +353,86 @@ const CustomField = ({
                   />
                 ) : fieldType === FieldTypes?.CHECKBOX ? (
                   <div className=" flex flex-row flex-wrap gap-1.5">
-                    {options?.map((opt) => (
-                      <div
-                        key={opt.value}
-                        className=" flex flex-row items-center gap-2 flex-nowrap"
-                      >
-                        <input
-                          className={clsx(
-                            "whitespace-nowrap",
-                            labelClassName ? labelClassName : " text-gray-500"
-                          )}
-                          disabled={field.value ? readOnly : false}
-                          type="checkbox"
-                          onSelect={field.value}
-                          onChange={field.onChange}
-                        />
-                        <label
-                          className={clsx(
-                            "whitespace-nowrap",
-                            labelClassName ? labelClassName : " text-gray-500"
-                          )}
+                    {options?.map((opt) => {
+                      console.log("field", field.value);
+                      return (
+                        <div
+                          key={opt.value}
+                          className=" flex flex-row items-center gap-2 flex-nowrap"
                         >
-                          {opt.label}
-                        </label>
-                      </div>
-                    ))}
+                          <input
+                            className={clsx(
+                              "whitespace-nowrap",
+                              labelClassName ? labelClassName : " text-gray-500"
+                            )}
+                            disabled={field.value ? readOnly : false}
+                            type="checkbox"
+                            value={opt.value}
+                            checked={
+                              Array.isArray(field.value) &&
+                              field.value.includes(opt.value)
+                            }
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              const isChecked = e.target.checked;
+                              const currentValues = Array.isArray(field.value)
+                                ? field.value
+                                : [];
+                              let newValues = [];
+
+                              if (isChecked) {
+                                newValues = [...currentValues, value];
+                              } else {
+                                newValues = currentValues.filter(
+                                  (v) => v !== value
+                                );
+                              }
+
+                              field.onChange(newValues);
+                            }}
+                          />
+                          <label
+                            className={clsx(
+                              "whitespace-nowrap",
+                              labelClassName ? labelClassName : " text-gray-500"
+                            )}
+                          >
+                            {opt.label}
+                          </label>
+                        </div>
+                      );
+                    })}
                   </div>
                 ) : fieldType === FieldTypes?.RADIOBUTTON ? (
                   <div className=" flex flex-row flex-wrap gap-1.5">
-                    {options?.map((opt) => (
-                      <div
-                        key={opt.value}
-                        className=" flex flex-row items-center gap-2 flex-nowrap"
-                      >
-                        <input
-                          disabled={field.value ? readOnly : false}
-                          type="radio"
-                          value={opt.value}
-                          checked={
-                            (field.value ?? options[0]?.value) === opt.value
-                          }
-                          onChange={() => field.onChange(opt.value)}
-                        />
-                        <label
-                          className={clsx(
-                            "whitespace-nowrap",
-                            labelClassName ? labelClassName : " text-gray-500"
-                          )}
+                    {options?.map((opt) => {
+                      console.log("radio", field.value);
+                      return (
+                        <div
+                          key={opt.value}
+                          className=" flex flex-row items-center gap-2 flex-nowrap"
                         >
-                          {opt.label}
-                        </label>
-                      </div>
-                    ))}
+                          <input
+                            name={field.name}
+                            disabled={field.value ? readOnly : false}
+                            type="radio"
+                            defaultValue={options[0]?.value}
+                            checked={
+                              (field.value ?? options[0]?.value) === opt.value
+                            }
+                            onChange={() => field.onChange(opt.value)}
+                          />
+                          <label
+                            className={clsx(
+                              "whitespace-nowrap",
+                              labelClassName ? labelClassName : " text-gray-500"
+                            )}
+                          >
+                            {opt.label}
+                          </label>
+                        </div>
+                      );
+                    })}
                   </div>
                 ) : fieldType === FieldTypes?.PASSFIELD ? (
                   <div className="relative">
@@ -397,6 +444,8 @@ const CustomField = ({
                           : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]",
                         `placeholder:text-[${placeHoldercolor}] placeholder:text-[${placeHolderSize}]`
                       )}
+                      data-tooltip-id={`tooltip-${placeHolder}`}
+                      data-tooltip-content={`${placeHolder}`}
                       defaultValue={field.value}
                       style={{
                         borderColor: errors[names]
@@ -431,7 +480,7 @@ const CustomField = ({
                         className="absolute top-3 right-3"
                         onClick={() => setTogglePassword(!tooglePassword)}
                       >
-                        {tooglePassword ? <FaEye /> : <FaEyeSlash />}
+                        {tooglePassword ? <FaEyeSlash /> : <FaEye />}
                       </div>
                     )}
                   </div>
@@ -484,7 +533,10 @@ const CustomField = ({
                                     ? selectFile
                                     : "Drag & drop or click to browse"}
                                 </p>
-                                 <p className="text-xs text-gray-500">{`${maxFile}`} files are the maximum number of files you can drop here</p>
+                                <p className="text-xs text-gray-500">
+                                  {`${maxFile}`} files are the maximum number of
+                                  files you can drop here
+                                </p>
                               </label>
                             </div>
                           </section>
@@ -533,6 +585,8 @@ const CustomField = ({
                           : "bg-[#F7F7F7] !px-2 !py-3 rounded-sm border border-[#F2F2F2]",
                         `placeholder:text-[${placeHoldercolor}] placeholder:text-[${placeHolderSize}]`
                       )}
+                      data-tooltip-id={`tooltip-${placeHolder}`}
+                      data-tooltip-content={`${placeHolder}`}
                       style={{
                         borderColor: errors[names]
                           ? focusErrorBorderColor
@@ -588,64 +642,72 @@ const CustomField = ({
                     )}
                   </div>
                 ) : fieldType === FieldTypes?.MULTISELECT ? (
-                  <Select
-                    isDisabled={field.value ? readOnly : false}
-                    isSearchable={isSearchable}
-                    placeholder={!isFocused ? placeHolder : ""}
-                    styles={customStyles}
-                    value={[
-                      ...options.filter((option) => option.default),
-                      ...options.filter(
-                        (option) =>
-                          field.value?.includes(option.value) && !option.default
-                      ),
-                    ]}
-                    theme={(theme) => ({
-                      ...theme,
-                      borderRadius: 0,
-                      colors: {
-                        ...theme.colors,
-                        // primary25: `${
-                        //   OptionSelectColor ? OptionSelectColor : "#5081B9"
-                        // }`,
-                        primary: "#F2F2F2",
-                      },
-                    })}
-                    isMulti
-                    isClearable={options?.some((val) => !val.default === true)}
-                    onChange={(selectedOptions, actionMeta) => {
-                      switch (actionMeta.action) {
-                        case "remove-value":
-                        case "pop-value":
-                          if (actionMeta.removedValue.default) {
-                            return;
-                          }
-                          break;
-                        case "clear":
-                          selectedOptions = options.filter(
-                            (option) => option.default
-                          );
-                          break;
-                      }
+                  <div
+                    data-tooltip-id={`tooltip-${placeHolder}`}
+                    data-tooltip-content={`${placeHolder}`}
+                  >
+                    <Select
+                      isDisabled={field.value ? readOnly : false}
+                      isSearchable={isSearchable}
+                      placeholder={!isFocused ? placeHolder : ""}
+                      styles={customStyles}
+                      value={[
+                        ...options.filter((option) => option.default),
+                        ...options.filter(
+                          (option) =>
+                            field.value?.includes(option.value) &&
+                            !option.default
+                        ),
+                      ]}
+                      theme={(theme) => ({
+                        ...theme,
+                        borderRadius: 0,
+                        colors: {
+                          ...theme.colors,
+                          // primary25: `${
+                          //   OptionSelectColor ? OptionSelectColor : "#5081B9"
+                          // }`,
+                          primary: "#F2F2F2",
+                        },
+                      })}
+                      isMulti
+                      isClearable={options?.some(
+                        (val) => !val.default === true
+                      )}
+                      onChange={(selectedOptions, actionMeta) => {
+                        switch (actionMeta.action) {
+                          case "remove-value":
+                          case "pop-value":
+                            if (actionMeta.removedValue.default) {
+                              return;
+                            }
+                            break;
+                          case "clear":
+                            selectedOptions = options.filter(
+                              (option) => option.default
+                            );
+                            break;
+                        }
 
-                      const selectedNonFixedValues =
-                        selectedOptions
-                          ?.filter((option) => !option.default)
-                          .map((option) => option.value) || [];
+                        const selectedNonFixedValues =
+                          selectedOptions
+                            ?.filter((option) => !option.default)
+                            .map((option) => option.value) || [];
 
-                      const fixedValues = options
-                        .filter((option) => option.default)
-                        .map((option) => option.value);
+                        const fixedValues = options
+                          .filter((option) => option.default)
+                          .map((option) => option.value);
 
-                      field.onChange([
-                        ...fixedValues,
-                        ...selectedNonFixedValues,
-                      ]);
-                    }}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    options={options}
-                  />
+                        field.onChange([
+                          ...fixedValues,
+                          ...selectedNonFixedValues,
+                        ]);
+                      }}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      options={options}
+                    />
+                  </div>
                 ) : fieldType === FieldTypes?.PREVIEW ? (
                   <div
                     className=" inline-block"
@@ -660,6 +722,7 @@ const CustomField = ({
                   </div>
                 ) : null}
               </div>
+
               {errors[names] && (
                 <div
                   className={clsx(
@@ -676,6 +739,8 @@ const CustomField = ({
           );
         }}
       />
+      <Tooltip id={`tooltip-${label}`} place="top" />
+      <Tooltip id={`tooltip-${placeHolder}`} place="top" />
     </div>
   );
 };
