@@ -13,6 +13,8 @@ import Upload from "../../assets/icons/upload.svg";
 import { FieldTypes, type ValidationProps } from "../../types";
 import { ValidationRules } from "../../utils/ValidationRegister";
 import Label from "../label";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleCheckbox } from "../../redux/slices/checkboxSlice";
 
 interface Options {
   label: string;
@@ -28,6 +30,7 @@ interface IProps {
   readOnly?: boolean;
   type?: string;
   maxFile?: number;
+  uploadType? : string
   OptionSelectColor?: string;
   OptionFocusColor?: string;
   OptionTextColor?: string;
@@ -66,6 +69,7 @@ const CustomField = ({
   inputWidth = "10",
   placeHolder,
   ValidClassName,
+  uploadType,
   OptionSelectColor = "#5081B9",
   OptionSelectFocusColor = "#5081B9",
   isSearchable,
@@ -96,11 +100,13 @@ const CustomField = ({
   onChangeArea,
   options = [],
 }: IProps) => {
+
   const {
     control,
     formState: { errors },
   } = useFormContext();
 
+  const dispatch = useDispatch();
   const [isFocused, setIsFocused] = useState(false);
   const [tooglePassword, setTogglePassword] = useState(false);
   const [realValue, setRealValue] = useState("");
@@ -193,6 +199,20 @@ const CustomField = ({
     },
   };
 
+
+  const acceptOnlyImages = {
+  "image/*": [".png", ".jpg", ".jpeg", ".gif"],
+};
+
+const acceptOnlyPDFs = {
+  "application/pdf": [".pdf"],
+};
+
+const acceptImagesAndPDFs = {
+  "image/*": [".png", ".jpg", ".jpeg", ".gif"],
+  "application/pdf": [".pdf"],
+};
+
   return (
     <div>
       <Controller
@@ -200,16 +220,15 @@ const CustomField = ({
         name={names}
         rules={ValidationRules(validation)}
         render={({ field }) => {
+          // console.log(`${names}`, field.value);
+
           return (
             <div className=" text-start" {...field}>
               <div className={clsx("relative")}>
                 {showFloatingLabel && (isFocused || field.value) && (
                   <label
                     htmlFor={label}
-                    className={clsx(
-                      "absolute -top-2.5 left-2 z-[9] "
-                      // isFocused || field.value ? "absolute" : ""
-                    )}
+                    className={clsx("absolute -top-2.5 left-2 z-[9] ")}
                     data-tooltip-id={`tooltip-${label}`}
                     data-tooltip-content={`${label}`}
                   >
@@ -354,44 +373,32 @@ const CustomField = ({
                 ) : fieldType === FieldTypes?.CHECKBOX ? (
                   <div className=" flex flex-row flex-wrap gap-1.5">
                     {options?.map((opt) => {
-                      console.log("field", field.value);
                       return (
                         <div
-                          key={opt.value}
+                          key={`${field.name}-${opt.value}`}
                           className=" flex flex-row items-center gap-2 flex-nowrap"
                         >
                           <input
+                            id={`${field.name}-${opt.value}`}
                             className={clsx(
                               "whitespace-nowrap",
                               labelClassName ? labelClassName : " text-gray-500"
                             )}
-                            disabled={field.value ? readOnly : false}
+                            // disabled={field.value ? readOnly : false}
                             type="checkbox"
-                            value={opt.value}
-                            checked={
-                              Array.isArray(field.value) &&
-                              field.value.includes(opt.value)
-                            }
+                            checked={selectedValues.includes(opt.value)}
                             onChange={(e) => {
-                              const value = e.target.value;
                               const isChecked = e.target.checked;
-                              const currentValues = Array.isArray(field.value)
-                                ? field.value
-                                : [];
-                              let newValues = [];
-
-                              if (isChecked) {
-                                newValues = [...currentValues, value];
-                              } else {
-                                newValues = currentValues.filter(
-                                  (v) => v !== value
-                                );
-                              }
-
-                              field.onChange(newValues);
+                              const newValues = isChecked
+                                ? [...selectedValues, opt.value]
+                                : selectedValues.filter(
+                                    (v: string) => v !== opt.value
+                                  );
+                              dispatch(toggleCheckbox(newValues));
                             }}
                           />
                           <label
+                            htmlFor={`${field.name}-${opt.value}`}
                             className={clsx(
                               "whitespace-nowrap",
                               labelClassName ? labelClassName : " text-gray-500"
@@ -406,20 +413,18 @@ const CustomField = ({
                 ) : fieldType === FieldTypes?.RADIOBUTTON ? (
                   <div className=" flex flex-row flex-wrap gap-1.5">
                     {options?.map((opt) => {
-                      console.log("radio", field.value);
                       return (
                         <div
                           key={opt.value}
                           className=" flex flex-row items-center gap-2 flex-nowrap"
                         >
                           <input
+                            id={`${field.name}-${opt.value}`}
                             name={field.name}
                             disabled={field.value ? readOnly : false}
                             type="radio"
-                            defaultValue={options[0]?.value}
-                            checked={
-                              (field.value ?? options[0]?.value) === opt.value
-                            }
+                            defaultValue={opt.value}
+                            checked={field.value === opt.value}
                             onChange={() => field.onChange(opt.value)}
                           />
                           <label
@@ -427,6 +432,7 @@ const CustomField = ({
                               "whitespace-nowrap",
                               labelClassName ? labelClassName : " text-gray-500"
                             )}
+                            htmlFor={`${field.name}-${opt.value}`}
                           >
                             {opt.label}
                           </label>
@@ -502,11 +508,7 @@ const CustomField = ({
                           }
                         }}
                         maxFiles={maxFile ? maxFile : 1}
-                        accept={{
-                          "image/*": [".png", ".jpg", ".jpeg", ".gif"],
-                          "application/pdf": [".pdf"],
-                          "text/plain": [".txt"],
-                        }}
+                        accept={uploadType === "image" ? acceptOnlyImages : uploadType === "pdf" ? acceptOnlyPDFs : acceptImagesAndPDFs}
                       >
                         {({ getRootProps, getInputProps }) => (
                           <section>
@@ -628,8 +630,6 @@ const CustomField = ({
                           setRealValue(newValue);
                           field.onChange(newValue);
                         }
-
-                        if (onChange) onChange(e);
                       }}
                     />
                     {fieldType === FieldTypes?.CUSTOMPASS && (
@@ -740,7 +740,8 @@ const CustomField = ({
         }}
       />
       <Tooltip id={`tooltip-${label}`} place="top" />
-      <Tooltip id={`tooltip-${placeHolder}`} place="top" />
+      {!isFocused ? <Tooltip id={`tooltip-${placeHolder}`} place="top" />: null}
+      
     </div>
   );
 };
