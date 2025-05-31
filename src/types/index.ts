@@ -53,6 +53,7 @@ export interface Validations{
 //   postalCode: string
 //   city: string
 // }
+
 export interface FormValues {
   fullName: string,
   dob: string,

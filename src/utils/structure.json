@@ -150,6 +150,33 @@
           }
         },
         {
+          "key": "multiCheckbox",
+          "label": "multi CheckBox",
+          "placeholder": "Choose Checkboxes",
+          "fieldType": "checkbox-group",
+          "dropdownOptions": [
+            {
+              "label": "Value 1",
+              "value": "1"
+            },
+            {
+              "label": "Value 2",
+              "value": "2"
+            },
+            {
+              "label": "Value 3",
+              "value": "3"
+            },
+            {
+              "label": "Value 4",
+              "value": "4"
+            }
+          ],
+          "validation": {
+            "required": "N"
+          }
+        },
+        {
           "key": "designation",
           "label": "Designation",
           "placeholder": "Select Designation",
