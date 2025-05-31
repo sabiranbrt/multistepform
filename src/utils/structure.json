@@ -1,4 +1,5 @@
 {
+  "dynamicMethod": "data",
   "layout": "horizontallayout",
   "formType": "multiple",
   "formTitle": "center",

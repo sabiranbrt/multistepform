@@ -13,11 +13,11 @@ export const generateRandom13DigitNumber = () => {
     return Math.floor(Math.random() * 9000000000000) + 1000000000000;
 };
 
-// const url = import.meta.env.VITE_API_BASE_URL
+const url = import.meta.env.VITE_API_BASE_URL
 
 // Configure base URL
 const axios = Axios.create({
-    baseURL: "https://d509b979-0bf1-46bb-94f4-dc57fae5a0dd.mock.pstmn.io/",
+    baseURL: url,
     headers: {
         ...headers,
         "Content-Type": "application/json",

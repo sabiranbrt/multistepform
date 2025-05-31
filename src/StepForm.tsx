@@ -26,6 +26,7 @@ const StepForm = () => {
   const { handleSubmit, trigger } = methods;
 
   const onSubmit = async (formValues: FormValues) => {
+    localStorage.setItem("dynamicMethod",formList?.dynamicMethod)
     dispatch(updateLoading({ isLoading: true }));
     try {
       const response = await mutateAsync({ ...formValues });

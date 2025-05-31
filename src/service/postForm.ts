@@ -13,8 +13,9 @@ export const getFormList = () => {
 }
 
 export const getFormSave = (body: FormValues) => {
+   const postMethod = localStorage.getItem("dynamicMethod")
     return request<any>({
-        url: "data",
+        url: postMethod ?? "",
         method: "POST",
         headers: { includeUrn: true },
         data: body
