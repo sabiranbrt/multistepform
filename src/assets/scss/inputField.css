@@ -30,6 +30,10 @@ textarea {
   background: none !important;
 }
 
+.css-lkh0o5-menu {
+  z-index: 99 !important;
+}
+
 @media (max-width: 1200px) {
   .custom-grid {
     grid-template-columns: repeat(2, 1fr) !important;

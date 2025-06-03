@@ -1,0 +1,54 @@
+{
+  "note": "PG And payout services Transaction charge Portion ",
+  "slabDetails": [
+    {
+      "gst": "18%",
+      "fixed": null,
+      "charges": "18",
+      "percentage": null,
+      "maxTxnValue": 400,
+      "minTxnValue": 1,
+      "slabSequence": 1,
+      "calculationType": "PERCENTAGE"
+    },
+    {
+      "gst": "18%",
+      "fixed": null,
+      "charges": "18",
+      "percentage": null,
+      "maxTxnValue": 1000,
+      "minTxnValue": 401,
+      "slabSequence": 2,
+      "calculationType": "PERCENTAGE"
+    },
+    {
+      "gst": "18%",
+      "fixed": null,
+      "charges": "18",
+      "percentage": null,
+      "maxTxnValue": 2000,
+      "minTxnValue": 1001,
+      "slabSequence": 3,
+      "calculationType": "PERCENTAGE"
+    }
+  ],
+  "limitDetails": {
+    "maxValue": 50000,
+    "minValue": 2
+  },
+  "maxChargePercent": 5,
+  "gatewayPreferences": [
+    {
+      "displayName": "PG1",
+      "serviceName": "PG1"
+    },
+    {
+      "displayName": "PG2",
+      "serviceName": "PG2"
+    },
+    {
+      "displayName": "PG3",
+      "serviceName": "PG3"
+    }
+  ]
+}

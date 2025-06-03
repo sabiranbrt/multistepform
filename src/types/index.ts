@@ -28,7 +28,7 @@ export interface ValidationProps {
   errorMessage?: string;
   validations: Validations[]
 }
-export interface Validations{
+export interface Validations {
   regex: string
   errorMessage?: string;
 }
@@ -73,4 +73,14 @@ export interface FormValues {
   city: string
 }
 
-
+export enum QuickLinksEnum {
+  CreditCardBillPayment = "Credit Card Bill Payment",
+  FundWithdrawal = "Fund Withdrawal",
+  RentPayment = "Rent Payment",
+  FundSettlement = "Fund Settlement",
+  RegisterSender = "Register Sender",
+  Transactions = "Transactions",
+  TotalPayout = "Total Payout",
+  AccountLedger = "Account Ledger",
+  RelationshipManager = "Relationship Manager"
+}

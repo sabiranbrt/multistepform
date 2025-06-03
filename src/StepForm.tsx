@@ -6,14 +6,24 @@ import { useDispatch } from "react-redux";
 import ArrowLeft from "./assets/icons/arrowLeft.svg";
 import ArrowRight from "./assets/icons/arrowRight.svg";
 import { default as CustomField } from "./components/CustomField";
+import Modal from "./components/Modal";
+import LeftDetails from "./components/Modal/LeftDetails";
 import MultiFormHeader from "./components/multiFormHeader";
 import Spinner from "./components/spinner";
 import { useFormList, useSaveForm } from "./hooks";
 import { updateLoading } from "./redux/slices/appSlice";
 import type { FormValues } from "./types";
-import Modal from "./components/Modal";
+import agent from "./utils/agent.json";
+import slabData from "./utils/slab.json";
 
 const StepForm = () => {
+  const { note, slabDetails } = slabData;
+  // leftDetails
+  const { panCardData, userPersonalDetails, accounts } = agent;
+  console.log("panCardData", panCardData);
+  console.log("userPersonalDetails", userPersonalDetails);
+  console.log("accounts", accounts);
+
   const [index, setIndex] = useState(0);
   const dispatch = useDispatch();
   const { data: formList, isLoading } = useFormList();
@@ -126,7 +136,7 @@ const StepForm = () => {
 
   return (
     <>
-      <div className=" h-dvh">
+      <div className="">
         <FormProvider {...methods}>
           <div
             className={clsx(
@@ -228,7 +238,87 @@ const StepForm = () => {
         >
           OpenModal
         </button>
-        {isModalOpen && <Modal handleCancel={() => setIsModalOpen(false)} />}
+        {isModalOpen && (
+          <Modal handleCancel={() => setIsModalOpen(false)}>
+            <div className="p-1 border-b border-gray-100">
+              <h1 className="text-xl font-semibold text-gray-800 items-center gap-3 ml-4 mr-4">
+                {note}
+                {/* {transType === "CC" || transType === "FW"
+                      ? selectedOption
+                      : transType === "EP"
+                      ? isRP
+                        ? "Rent Payment"
+                        : "Fund Settlement"
+                      : "Education Fees"}
+                    {transType === "EP" ||
+                    transType === "CC" ||
+                    transType === "FW" ? (
+                      <div className="text-base text-primary flex justify-center text-left flex-nowrap">
+                        {note}
+                      </div>
+                    ) : (
+                      <div className="flex flex-nowrap items-center justify-end mt-2 w-full space-x-4 relative group">
+                        <div className="text-base text-primary w-full">
+                          {note}
+                        </div>
+                        <div className="flex flex-nowrap items-center justify-end mt-2 w-full space-x-4 relative group">
+                          <label className="flex items-center space-x-2">
+                            <input
+                              type="radio"
+                              name="payment"
+                              value="credit"
+                              checked={selectedPayment === "credit"}
+                              onChange={handleChangeRadio}
+                            />
+
+                            <span className="text-gray-600 text-sm">
+                              Credit Card
+                            </span>
+                          </label>
+                          <label className="flex items-center space-x-2">
+                            <input
+                              type="radio"
+                              name="payment"
+                              value="master"
+                              checked={selectedPayment === "master"}
+                              onChange={handleChangeRadio}
+                            />
+                            <span className="text-gray-600 text-sm">
+                              Master Card
+                            </span>
+                          </label>
+                          <label className="flex items-center space-x-2 relative group/others">
+                            <input
+                              type="radio"
+                              name="payment"
+                              value="other"
+                              checked={selectedPayment === "other"}
+                              onChange={handleChangeRadio}
+                              disabled
+                            />
+                            <span className="text-gray-600 text-sm">
+                              Corporate Card
+                            </span>
+                            <span className="absolute hidden group-hover/others:block p-1 rounded-md top-5 -right-3 text-xs w-36 text-center bg-gray-600 text-white">
+                              Service Not Available
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    )} */}
+              </h1>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2">
+              {/* Left Section - Details */}
+              <LeftDetails
+                slabDetails={slabDetails}
+                panCardData={panCardData}
+              />
+              {/* Right Section - Transfer Form */}
+              {/* <RightForm /> */}
+            </div>
+          </Modal>
+        )}
       </div>
     </>
   );
