@@ -17,13 +17,14 @@ interface IProp {
   CrossIcon?: string;
   UploadIcon?: string;
   FileIcon?: string;
-  placeHolderSize?: string
+  placeHolderSize?: string;
   uploadType?: string;
   textClassName?: string;
   placeHoldercolor?: string;
   labelClassName?: string;
   maxFile?: number;
   validation?: ValidationProps;
+  onChangeImage?: (value: string) => void;
 }
 
 const FileField = ({
@@ -35,6 +36,7 @@ const FileField = ({
   validation,
   inputHeight,
   inputWidth,
+  onChangeImage,
   textClassName,
   placeHoldercolor,
   FileIcon,
@@ -83,9 +85,12 @@ const FileField = ({
                 )}
               >
                 <Dropzone
-                  onDrop={(acceptedFiles) => {
+                  onDrop={(acceptedFiles: any) => {
                     if (acceptedFiles.length > 0) {
-                      setSelectedFile(acceptedFiles[0].name);
+                      const file = acceptedFiles[0].name;
+                      setSelectedFile(file);
+                      field.onChange(file);
+                      onChangeImage?.(file);
                     }
                   }}
                   maxFiles={maxFile ? maxFile : 1}
@@ -148,6 +153,7 @@ const FileField = ({
                     onClick={() => {
                       field.onChange(null);
                       handleRemoveFile();
+                      onChangeImage?.("");
                     }}
                     className="p-1 hover:bg-gray-200 rounded-full transition-colors"
                     aria-label="Remove file"

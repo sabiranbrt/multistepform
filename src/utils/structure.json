@@ -42,6 +42,7 @@
           "placeholder": "Enter Citizenship Number",
           "fieldType": "text",
           "textSecurity": "$",
+           "ActionFetch":"showData",
           "validation": {
             "required": "Y",
               "errorMessage": "Citizenship number is required."
@@ -305,7 +306,7 @@
 }
 
 {
-  "fullName": "",
+  "fullName": "Sabiran Shah",
   "dob": "",
   "citizenshipNumber": "",
   "password": "",

@@ -51,6 +51,7 @@ interface IProps {
   imageLink: string;
   disabled?: boolean;
   onChange?: (text: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeImage?: (value: string) => void;
   onChangeArea?: (text: React.ChangeEvent<HTMLTextAreaElement>) => void;
   labelClassName?: string;
   nonlabelClassName?: string;
@@ -59,6 +60,8 @@ interface IProps {
   options?: Options[];
   validation?: ValidationProps;
   textSecurity?: string;
+  ActionFetch?: string;
+  onClick?: () => void;
 }
 
 const CustomField = ({
@@ -72,11 +75,14 @@ const CustomField = ({
   OptionSelectFocusColor = "#5081B9",
   isSearchable,
   UploadIcon,
+  onChangeImage,
+  onClick,
   OptionFocusColor = "#fff",
   readOnly,
   maxFile = 1,
   CrossIcon,
   FileIcon,
+  ActionFetch,
   imageLink,
   label,
   focusErrorBorderColor = "#f94d44",
@@ -149,6 +155,7 @@ const CustomField = ({
               focusErrorBgColor={focusErrorBgColor}
               focusErrorShadowColor={focusErrorShadowColor}
               ValidClassName={ValidClassName}
+              ActionFetch={ActionFetch}
               placeHolderSize={placeHolderSize}
               textClassName={textClassName}
               focusBorderColor={focusBorderColor}
@@ -156,6 +163,7 @@ const CustomField = ({
               focusErrorBorderColor={focusErrorBorderColor}
               labelClassName={labelClassName}
               validation={validation}
+              onClick={onClick}
               readOnly={readOnly}
               type={type}
             />
@@ -256,6 +264,7 @@ const CustomField = ({
               FileIcon={FileIcon}
               CrossIcon={CrossIcon}
               UploadIcon={UploadIcon}
+              onChangeImage={onChangeImage}
             />
           ) : fieldType === FieldTypes?.CUSTOMPASS ? (
             <CustomPassField
@@ -282,7 +291,7 @@ const CustomField = ({
               fieldType={fieldType}
             />
           ) : fieldType === FieldTypes?.MULTISELECT ? (
-             <SelectField
+            <SelectField
               names={names}
               options={options}
               isFocused={isFocused}

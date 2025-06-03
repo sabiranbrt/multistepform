@@ -11,11 +11,14 @@ import Spinner from "./components/spinner";
 import { useFormList, useSaveForm } from "./hooks";
 import { updateLoading } from "./redux/slices/appSlice";
 import type { FormValues } from "./types";
+import Modal from "./components/Modal";
 
 const StepForm = () => {
   const [index, setIndex] = useState(0);
   const dispatch = useDispatch();
   const { data: formList, isLoading } = useFormList();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { mutateAsync } = useSaveForm();
 
@@ -23,14 +26,19 @@ const StepForm = () => {
     mode: "onChange",
   });
 
-  const { handleSubmit, trigger } = methods;
+  const { handleSubmit, trigger, setValue } = methods;
+
+  const mobileNumber = "9842143869";
+
+  const onSubmitForData = () => {
+    setValue("mobileNumber", mobileNumber);
+  };
 
   const onSubmit = async (formValues: FormValues) => {
-    localStorage.setItem("dynamicMethod",formList?.dynamicMethod)
+    localStorage.setItem("dynamicMethod", formList?.dynamicMethod);
     dispatch(updateLoading({ isLoading: true }));
     try {
       const response = await mutateAsync({ ...formValues });
-
       console.log("response", response);
     } catch (err) {
       console.log("error", err);
@@ -65,6 +73,9 @@ const StepForm = () => {
           fieldType={displaylist?.fieldType}
           options={displaylist?.dropdownOptions}
           validation={displaylist?.validation}
+          onChangeImage={() => {}} // for image formData change
+          onClick={onSubmitForData} // for action fetch button auto fill option if available show or not
+          ActionFetch={displaylist?.ActionFetch} // autofetch button show or hide according to api request data
         />
       ));
     }
@@ -209,6 +220,15 @@ const StepForm = () => {
             </div>
           </div>
         </FormProvider>
+        <button
+          type="submit"
+          className="bg-[#5081B9] hover:bg-[#000769] transition-[2000] text-white !px-4 !py-2 rounded cursor-pointer"
+          title="Submit Now"
+          onClick={() => setIsModalOpen(true)}
+        >
+          OpenModal
+        </button>
+        {isModalOpen && <Modal handleCancel={() => setIsModalOpen(false)} />}
       </div>
     </>
   );

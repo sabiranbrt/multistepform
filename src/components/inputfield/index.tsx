@@ -13,6 +13,7 @@ interface IProp {
   focusErrorBgColor?: string;
   focusErrorShadowColor?: string;
   ValidClassName?: string;
+  ActionFetch?: string;
   placeHolderSize?: string;
   textClassName?: string;
   focusBorderColor?: string;
@@ -24,6 +25,8 @@ interface IProp {
   readOnly?: boolean;
   validation?: ValidationProps;
   type?: string;
+  onChange?: (value: string) => void;
+  onClick?: () => void;
 }
 
 const InputField = ({
@@ -32,6 +35,7 @@ const InputField = ({
   handleFocus,
   names,
   inputHeight,
+  ActionFetch,
   inputWidth,
   placeHolder,
   ValidClassName,
@@ -39,6 +43,8 @@ const InputField = ({
   focusErrorBorderColor,
   validation,
   placeHolderSize,
+  onChange,
+  onClick,
   placeHoldercolor,
   focusBorderColor,
   focusShadowColor,
@@ -98,8 +104,23 @@ const InputField = ({
               onChange={(e) => {
                 const value = e.target.value;
                 field.onChange(value);
+                onChange?.(value);
               }}
             />
+
+            {ActionFetch ? (
+              <div className=" absolute top-1.5 right-2.5">
+                <button
+                  type="submit"
+                  className="bg-[#5081B9] hover:bg-[#000769] transition-[2000] text-white !px-2 !py-1 rounded cursor-pointer"
+                  title="Submit Now"
+                  onClick={onClick}
+                >
+                  {ActionFetch}
+                </button>
+              </div>
+            ) : null}
+
             {errors[names] && (
               <div
                 className={clsx(
